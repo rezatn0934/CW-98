@@ -26,4 +26,17 @@ class Contact:
         print(contacts)
         cls.save_to_pickle(contacts)
 
+    @classmethod
+    def edite_contact(cls, name, email=None, phone=None):
+        contacts = cls.load_from_pickle()
+        for contact in [contacts]:
+            if contact.name == name:
+                if email:
+                    contact.email = email
+                if phone:
+                    contact.phone = phone
+                cls.save_to_pickle(contact)
+                break
+
+
 
