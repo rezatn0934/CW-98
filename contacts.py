@@ -1,9 +1,13 @@
 from dataclasses import dataclass
+import pickle
 
 
 @dataclass
-class Contacts:
+class Contact:
     name: str
     email: str
     phone: str
-    Contacts: dict= field(default_factory=dict)
+    def save_to_pickle(self, obj):
+        with open("contacts.pickle","rb") as f:
+            pickle.dump(obj, f)
+
