@@ -11,3 +11,8 @@ class Contact:
         with open("contacts.pickle","rb") as f:
             pickle.dump(obj, f)
 
+    @classmethod
+    def load_from_pickle(cls):
+        with open("contacts.pickle","rb") as f:
+            return pickle.loads(f)
+
