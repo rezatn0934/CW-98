@@ -18,9 +18,10 @@ class Contact:
         with open("contacts.pickle","rb") as f:
             return pickle.loads(f)
 
-    @dataclass
-    def add_contact(self, name, email, phone):
+    @classmethod
+    def add_contact(cls, name, email, phone):
         contact= Contact(name=name, email=email,phone=phone)
+        cls.save_to_pickle(contact)
 
 
 
