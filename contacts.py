@@ -8,7 +8,7 @@ class Contact:
     email: str
     phone: str
 
-    @dataclass
+    @classmethod
     def save_to_pickle(cls, obj):
         with open("contacts.pickle","rb") as f:
             pickle.dump(obj, f)
