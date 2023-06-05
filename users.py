@@ -35,15 +35,26 @@ class User:
     @classmethod
     def modifying_user_account(cls, name, new_username=None, new_password=None):
         users = cls.load_from_pickle()
-        for num, user in enumerate(users):
-            if user.username == name:
+        if isinstance(cls.load_from_pickle(), list):
+            for num, user in enumerate(users):
+                if user.username == name:
+                    if new_username:
+                        user.username = new_username
+                    if new_password:
+                        user.password = new_password
+                    users[num] = user
+                    cls.save_to_pickle(users)
+                    break
+        else:
+            if users.username == name:
                 if new_username:
-                    user.username = new_username
+                    users.username = new_username
                 if new_password:
-                    user.password = new_password
-                users[num] = user
+                    users.password = new_password
                 cls.save_to_pickle(users)
-                break
+            else:
+                print("user doesn't exist!!!")
+
 
     @classmethod
     def check_user(cls, in_user):
