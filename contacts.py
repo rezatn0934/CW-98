@@ -37,15 +37,26 @@ class Contact:
     @classmethod
     def edite_contact(cls, name, email=None, phone=None):
         contacts = cls.load_from_pickle()
-        for num, contact in enumerate(contacts):
-            if contact.name == name:
+        if isinstance(cls.load_from_pickle(), list):
+            for num, contact in enumerate(contacts):
+                if contact.name == name:
+                    if email:
+                        contact.email = email
+                    if phone:
+                        contact.phone = phone
+                    contacts[num]=contact
+                    break
+        else:
+            if contacts.name == name:
                 if email:
-                    contact.email = email
+                    contacts.email = email
                 if phone:
-                    contact.phone = phone
-                contacts[num]=contact
-                cls.save_to_pickle(contacts)
-                break
+                    contacts.phone = phone
+            else:
+                print("Contact doesn't exist!!!")
+
+        cls.save_to_pickle(contacts)
+
 
     @classmethod
     def check_contact(cls, in_contact):
