@@ -11,18 +11,18 @@ class Contact:
 
     @classmethod
     def save_to_pickle(cls, obj):
-        with open("contacts.pickle", "wb") as f:
+        with open("data/contacts.pickle", "wb") as f:
             pickle.dump(obj, f)
 
     @classmethod
     def load_from_pickle(cls):
-        with open("contacts.pickle", "rb") as f:
+        with open("data/contacts.pickle", "rb") as f:
             return pickle.load(f)
 
     @classmethod
     def add_contact(cls, name, email, phone):
         contact = Contact(name=name, email=email, phone=phone)
-        if "contacts.pickle" in os.listdir():
+        if "contacts.pickle" in os.listdir("data/"):
             if isinstance(cls.load_from_pickle(), list):
                 result = cls.check_contact(contact)
                 contacts = cls.load_from_pickle()
@@ -82,8 +82,11 @@ class Contact:
                     print("Contact doesn't exist!!")
         else:
             if contacts.name == contact_name:
-                os.remove("contacts.pickle")
+                os.remove("data/contacts.pickle") # remove nashe
             else:
                 print("Contact doesn't exist!!")
 
 
+Contact.add_contact("reza", "152", "456")
+Contact.add_contact("ali", "152", "456")
+print(Contact.load_from_pickle())
