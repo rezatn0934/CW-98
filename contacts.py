@@ -56,3 +56,22 @@ class Contact:
                 return False
         return True
 
+    @classmethod
+    def delete_contact(cls, contact_name):
+        contacts = cls.load_from_pickle()
+        if isinstance(contacts, list):
+            for index,contact in enumerate(contacts):
+                if contact.name == contact_name:
+                    contacts.pop(index)
+                    cls.save_to_pickle(contacts)
+                    return
+                else:
+                    print("Contact doesn't exist!!")
+        else:
+            if contacts.name == contact_name:
+                os.remove("contacts.pickle")
+            else:
+                print("Contact doesn't exist!!")
+
+
+
