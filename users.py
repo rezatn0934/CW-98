@@ -44,3 +44,12 @@ class User:
                 users[num] = user
                 cls.save_to_pickle(users)
                 break
+
+    @classmethod
+    def check_user(cls, in_user):
+        users = cls.load_from_pickle()
+        for i, user in enumerate(users):
+            if user.username == in_user.username and user.password == in_user.password:
+                print("user already exist!!")
+                return False
+        return True
