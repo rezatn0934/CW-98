@@ -31,3 +31,16 @@ class User:
         else:
             users = user
         cls.save_to_pickle(users)
+
+    @classmethod
+    def modifying_user_account(cls, name, new_username=None, new_password=None):
+        users = cls.load_from_pickle()
+        for num, user in enumerate(users):
+            if user.username == name:
+                if new_username:
+                    user.username = new_username
+                if new_password:
+                    user.password = new_password
+                users[num] = user
+                cls.save_to_pickle(users)
+                break
