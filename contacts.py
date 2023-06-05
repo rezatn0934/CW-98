@@ -44,7 +44,9 @@ class Contact:
                         contact.email = email
                     if phone:
                         contact.phone = phone
-                    contacts[num]=contact
+                    contacts[num] = contact
+                    cls.save_to_pickle(contacts)
+
                     break
         else:
             if contacts.name == name:
@@ -52,10 +54,10 @@ class Contact:
                     contacts.email = email
                 if phone:
                     contacts.phone = phone
+                cls.save_to_pickle(contacts)
             else:
                 print("Contact doesn't exist!!!")
 
-        cls.save_to_pickle(contacts)
 
 
     @classmethod
