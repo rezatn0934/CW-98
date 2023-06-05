@@ -16,7 +16,7 @@ class Contact:
 
     @classmethod
     def load_from_pickle(cls):
-        with open("contacts.pickle","rb") as f:
+        with open("contacts.pickle", "rb") as f:
             return pickle.load(f)
 
     @classmethod
