@@ -217,8 +217,8 @@ class Contact:
         return re.match(pattern, email) is not None
 
     @staticmethod
-    def validate_phone(phon_number):
-        pattern = r'(?:\+98|0|0098)?9\d{2}-?\d{3}-?\d{4}'
+    def validate_phone(phone_number):
+        # pattern = r'(?:\+98|0|0098)?9\d{2}-?\d{3}-?\d{4}'
+        pattern = r'^(?:\+|00)?(98|0)?9\d{2}[- ]?\d{3}[- ]?\d{4}$|^\+?1[- ]?\d{3}[- ]?\d{3}[- ]?\d{4}$'
         match = re.match(pattern, phone_number)
         return match is not None
-
