@@ -104,7 +104,7 @@ class Contact:
         for i, contact in enumerate(contacts):
             print(f"{i}, {contact}")
 
-    @classmethod
+    @staticmethod
     def save_to_csv(cls, list, fpath="data/"):
         with open(fpath, 'w', newline="") as file:
             writer = csv.writer(file)
@@ -115,7 +115,7 @@ class Contact:
         contacts = cls.load_from_pickle(username)
         cls.save_to_csv(contacts)
 
-    @classmethod
+    @staticmethod
     def read_from_csv(cls,fpath="data/"):
         list1 = []
         with open(fpath, "r", newline="") as file:
@@ -124,3 +124,4 @@ class Contact:
                 if row1:
                     list1.append(row1)
         return list1
+
