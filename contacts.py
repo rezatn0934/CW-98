@@ -72,7 +72,7 @@ class Contact:
 
 
     @classmethod
-    def check_contact(cls, in_contact):
+    def check_contact(cls,username, in_contact):
         contacts = cls.load_from_pickle(username)
         for i, contact in enumerate(contacts):
             if contact.name == in_contact.name and contact.email == in_contact.email and contact.phone == in_contact.phone:
@@ -81,7 +81,7 @@ class Contact:
         return True
 
     @classmethod
-    def delete_contact(cls, contact_name):
+    def delete_contact(cls,username, contact_name):
         contacts = cls.load_from_pickle(username)
         if isinstance(contacts, list):
             for index,contact in enumerate(contacts):
