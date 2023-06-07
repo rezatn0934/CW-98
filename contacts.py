@@ -154,3 +154,18 @@ class Contact:
                 print(contact)
             else:
                 print("Contact doesn't exist!!")
+
+    @classmethod
+    def search_by_email(cls, username, contact_email):
+        ontacts = cls.load_from_pickle(username)
+        if isinstance(contacts, list):
+            for contact in contacts:
+                if contact.email == contact_email:
+                    print(contact)
+                else:
+                    print("Contact doesn't exist!!")
+        else:
+            if contacts.email == contact_email:
+                print(contact)
+            else:
+                print("Contact doesn't exist!!")
