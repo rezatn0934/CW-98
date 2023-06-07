@@ -11,6 +11,7 @@ class Contact:
     email: str
     phone: str
     username: str
+    categories: str = "All contact"
 
     @classmethod
     def save_to_pickle(cls, obj):
@@ -34,8 +35,8 @@ class Contact:
         return
 
     @classmethod
-    def add_contact(cls, username, name, email, phone):
-        contact = Contact(name=name, email=email, phone=phone, username=username)
+    def add_contact(cls, username, name, email, phone, categories="All contact"):
+        contact = Contact(name=name, email=email, phone=phone, username=username, categories=categories)
         if "contacts.pickle" in os.listdir("data/"):
             if isinstance(cls.load_from_pickle(username), list):
                 result = cls.check_contact(contact)
@@ -49,26 +50,33 @@ class Contact:
         cls.save_to_pickle(contacts)
 
     @classmethod
-    def edite_contact(cls,username, name, email=None, phone=None):
+    def edite_contact(cls,username, name, new_name=None, email=None, phone=None, categories=None):
         contacts = cls.load_from_pickle(username)
         if isinstance(cls.load_from_pickle(username), list):
             for num, contact in enumerate(contacts):
                 if contact.name == name:
+                    if new_name:
+                        contact.name = new_name
                     if email:
                         contact.email = email
                     if phone:
                         contact.phone = phone
+                    if categories:
+                        contact.categories = categories
                     contacts[num] = contact
                     cls.save_to_pickle(contacts)
 
                     break
         else:
             if contacts.name == name:
+                if new_name:
+                    contacts.name = new_name
                 if email:
                     contacts.email = email
                 if phone:
-                    contacts.phone = phone
-                cls.save_to_pickle(contacts)
+                    contact.phone = phone
+                if categories:
+                    contacts.categories = categories
             else:
                 print("Contact doesn't exist!!!")
 
@@ -105,15 +113,15 @@ class Contact:
             print(f"{i}, {contact}")
 
     @staticmethod
-    def save_to_csv(list, fpath):
+    def save_to_csv(list1, fpath):
         with open(fpath, 'w', newline="") as file:
             writer = csv.writer(file)
-            writer.writerows(str)
+            writer.writerows(list1)
 
     @classmethod
     def save_contact_to_csv(cls, username, fpath="data/"):
         contacts = cls.load_from_pickle(username)
-        cls.save_to_csv(list=contacts, fpath=fpath)
+        cls.save_to_csv(list1=contacts, fpath=fpath)
 
     @staticmethod
     def read_from_csv(fpath):
@@ -126,8 +134,8 @@ class Contact:
         return list1
 
     @classmethod
-    def creat_contacts_from_csv(cls, username, fpath="data/"):
+    def creat_contacts_from_csv(cls, username, fpath="data/", categories="All contact"):
         contacts = cls.read_from_csv(fpath)
         for contact in contacts:
-            name, email, phone = contact
-            Contact(name=name, email=email, phone=phone, username=username)
+            name, email, phone= contact
+            Contact(name=name, email=email, phone=phone, username=username, categories=categories)
