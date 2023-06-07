@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import pickle
 import os
 import csv
+import re
 
 
 
@@ -35,6 +36,9 @@ class Contact:
 
     @classmethod
     def add_contact(cls, username, name, email, phone, categories="All contact"):
+        if not cls.validate_email(email):
+            print("Invalid email address")
+            return
         contact = Contact(name=name, email=email, phone=phone, username=username, categories=categories)
         if "contacts.pickle" in os.listdir("data/"):
             if isinstance(cls.load_from_pickle(username), list):
@@ -50,6 +54,9 @@ class Contact:
 
     @classmethod
     def edite_contact(cls,username, name, new_name=None, email=None, phone=None, categories=None):
+        if not cls.validate_email(email):
+            print("Invalid email address")
+            return
         contacts = cls.load_from_pickle(username)
         if isinstance(cls.load_from_pickle(username), list):
             for num, contact in enumerate(contacts):
@@ -182,3 +189,9 @@ class Contact:
                 print(contact)
             else:
                 print("Contact doesn't exist!!")
+
+    @staticmethod
+    def validate_email(email):
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        return re.match(pattern, email) is not None
+
