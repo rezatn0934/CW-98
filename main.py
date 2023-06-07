@@ -102,7 +102,7 @@ def sub_menu1(username):
             print("Contact has been deleted!!")
             sub_menu1(username)
         case 4:
-            Contact.viwe_all_contacts(username)
+            Contact.view_all_contacts(username)
             sub_menu1(username)
         case 5:
             fpath = input("Enter your file path or pass( Default path: data/): ")
