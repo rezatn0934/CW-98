@@ -105,23 +105,29 @@ class Contact:
             print(f"{i}, {contact}")
 
     @staticmethod
-    def save_to_csv(list, fpath="data/"):
+    def save_to_csv(list, fpath):
         with open(fpath, 'w', newline="") as file:
             writer = csv.writer(file)
             writer.writerows(str)
 
     @classmethod
-    def save_contact_to_csv(cls, username):
+    def save_contact_to_csv(cls, username, fpath="data/"):
         contacts = cls.load_from_pickle(username)
-        cls.save_to_csv(contacts)
+        cls.save_to_csv(list=contacts, fpath=fpath)
 
     @staticmethod
-    def read_from_csv(fpath="data/"):
+    def read_from_csv(fpath):
         list1 = []
         with open(fpath, "r", newline="") as file:
             reader = csv.reader(file)
-            for row1 in reader:
-                if row1:
-                    list1.append(row1)
+            for row in reader:
+                if row:
+                    list1.append(row)
         return list1
 
+    @classmethod
+    def creat_contacts_from_csv(cls, username, fpath="data/"):
+        contacts = cls.read_from_csv(fpath)
+        for contact in contacts:
+            name, email, phone = contact
+            Contact(name=name, email=email, phone=phone, username=username)
