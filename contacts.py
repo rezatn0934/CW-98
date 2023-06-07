@@ -114,3 +114,13 @@ class Contact:
     def save_contact_to_csv(cls, username):
         contacts = cls.load_from_pickle(username)
         cls.save_to_csv(contacts)
+
+    @classmethod
+    def read_from_csv(cls,fpath="data/"):
+        list1 = []
+        with open(fpath, "r", newline="") as file:
+            reader = csv.reader(file)
+            for row1 in reader:
+                if row1:
+                    list1.append(row1)
+        return list1
