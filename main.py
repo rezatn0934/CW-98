@@ -3,15 +3,12 @@ from users import User
 import getpass
 
 
-
 def main_menu():
-    users = []
 
     while True:
         print("1. Create a new account")
         print("2. Login")
         print("3. Exit")
-
         choice = int(input("Enter your choice: "))
 
         match choice:
@@ -38,12 +35,13 @@ def main_menu():
 
 def sub_menu1(username):
     text = """
-1. Add a new contact
+1. Add contacts
 2. Edite an existing contact
 3. Delete a contact
 4. View all contact
-5. Back
-6. Quit   
+5. Save contact to a csv file
+6. Back
+7. Quit   
 """
     print(text)
     choice = int(input("Enter your choice: "))
@@ -89,16 +87,53 @@ def sub_menu1(username):
                     print("wrong input")
         case 3:
             name = input("Enter contact name: ")
-            Contact.delete_contact(name)
+            Contact.delete_contact(username=username,contact_name=name)
             print("Contact has been deleted!!")
             sub_menu1(username)
         case 4:
-            ...
+            Contact.viwe_all_contacts(username)
         case 5:
-            ...
+            fpath = input("Enter your file path or pass( Default path: data/): ")
+            if fpath:
+                Contact.save_contact_to_csv(username=username,fpath=fpath)
+            else:
+                Contact.save_contact_to_csv(username=username)
         case 6:
+            main_menu()
+        case 7:
             quit()
+        case _:
+            print("Wrong input!!")
+            sub_menu1()
 
+def sub_menu2(username):
+    text = """
+1. Add contact
+2. Import from csv file
+3. Back
+4. Quit
+"""
+    print(text)
+    choice = int(input("Enter your choice: "))
+    match choice:
+        case 1:
+            name = input("Enter contact name: ")
+            email = input("Enter contact email: ")
+            phone = input("Enter contact phone: ")
+            Contact.add_contact(name=name, email=email, phone=phone, username=username)
+        case 2:
+            fpath = input("Enter your file path or pass( Default path: data/): ")
+            if fpath:
+                Contact.creat_contacts_from_csv(username=username, fpath=fpath)
+            else:
+                Contact.creat_contacts_from_csv(username=username)
+        case 3:
+            sub_menu1(username)
+        case 4:
+            quit()
+        case _:
+            print("Wrong input!!!")
+            sub_menu2(username)
 
 if __name__ == "__main__":
     main_menu()
