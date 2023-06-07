@@ -40,33 +40,38 @@ def sub_menu1(username):
 3. Delete a contact
 4. View all contact
 5. Save contact to a csv file
-6. Back
-7. Quit   
+6. Search contact by name
+7. search contact by email
+8. Back
+9. Quit   
 """
     print(text)
     choice = int(input("Enter your choice: "))
 
     match choice:
         case 1:
-            name = input("Enter contact name: ")
-            email = input("Enter contact email: ")
-            phone = input("Enter contact phone: ")
-            Contact.add_contact(name=name, email=email, phone=phone,username=username)
+
             sub_menu1(username)
         case 2:
             name = input("Enter contact name: ")
-            text = """Choose what property you want to change: 
-1. Email
-2. Phone
-3. Both            
-4. Back
-5. Quit           
+            text = """Which property do you want to change: 
+1. Name
+2. Email
+3. Phone
+4. categories
+5. All           
+6. Back
+7. Quit           
 """
             print(text)
             choice = int(input("Enter your choice: "))
 
             match choice:
                 case 1:
+                    new_name = input("Enter contact new name: ")
+                    Contact.edite_contact(username=username, name=name, new_name=new_name)
+                    sub_menu1(username)
+                case 2:
                     email = input("Enter contact email: ")
                     Contact.edite_contact(username=username, name=name, email=email)
                     sub_menu1(username)
@@ -75,9 +80,15 @@ def sub_menu1(username):
                     Contact.edite_contact(username=username, name=name, phone=phone)
                     sub_menu1(username)
                 case 3:
+                    categories = input("Enter contact categories: ")
+                    Contact.edite_contact(username=username, name=name, categories=categories)
+                    sub_menu1(username)
+                case 4:
+                    new_name = input("Enter contact new name: ")
                     email = input("Enter contact email: ")
                     phone = input("Enter contact phone: ")
-                    Contact.edite_contact(username=username, name=name,email=email, phone=phone)
+                    categories = input("Enter contact categories: ")
+                    Contact.edite_contact(username=username, name=name, new_name=new_name, email=email, phone=phone, categories=categories)
                     sub_menu1(username)
                 case 4:
                     sub_menu1(username)
@@ -92,19 +103,30 @@ def sub_menu1(username):
             sub_menu1(username)
         case 4:
             Contact.viwe_all_contacts(username)
+            sub_menu1(username)
         case 5:
             fpath = input("Enter your file path or pass( Default path: data/): ")
             if fpath:
                 Contact.save_contact_to_csv(username=username,fpath=fpath)
             else:
                 Contact.save_contact_to_csv(username=username)
+            sub_menu1(username)
         case 6:
-            main_menu()
+            name = input("Enter contact new name: ")
+            Contact.search_by_name(username=username, contact_name=name)
+            sub_menu1(username)
         case 7:
+            email = input("Enter contact email: ")
+            Contact.search_by_email(username=username, contact_email=email)
+            sub_menu1(username)
+        case 8:
+            main_menu()
+        case 9:
             quit()
         case _:
             print("Wrong input!!")
-            sub_menu1()
+            sub_menu1(username)
+
 
 def sub_menu2(username):
     text = """
@@ -120,13 +142,26 @@ def sub_menu2(username):
             name = input("Enter contact name: ")
             email = input("Enter contact email: ")
             phone = input("Enter contact phone: ")
-            Contact.add_contact(name=name, email=email, phone=phone, username=username)
+            categories = input("Enter contact categories or pass(Default categories is All contact: ")
+            if categories:
+                Contact.add_contact(name=name, email=email, phone=phone, username=username,categories=categories)
+            else:
+                Contact.add_contact(name=name, email=email, phone=phone,username=username)
+            sub_menu2(username)
         case 2:
             fpath = input("Enter your file path or pass( Default path: data/): ")
-            if fpath:
-                Contact.creat_contacts_from_csv(username=username, fpath=fpath)
+            categories = input("Enter contact categories or pass(Default categories is All contact: ")
+            if categories:
+                if fpath:
+                    Contact.creat_contacts_from_csv(username=username, fpath=fpath, categories=categories)
+                else:
+                    Contact.creat_contacts_from_csv(username=username, categories=categories)
             else:
-                Contact.creat_contacts_from_csv(username=username)
+                if fpath:
+                    Contact.creat_contacts_from_csv(username=username, fpath=fpath)
+                else:
+                    Contact.creat_contacts_from_csv(username=username)
+            sub_menu2(username)
         case 3:
             sub_menu1(username)
         case 4:
@@ -134,6 +169,7 @@ def sub_menu2(username):
         case _:
             print("Wrong input!!!")
             sub_menu2(username)
+
 
 if __name__ == "__main__":
     main_menu()
