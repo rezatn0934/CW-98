@@ -39,7 +39,7 @@ class Contact:
         if not cls.validate_email(email):
             print("Invalid email address")
             return
-        if not cls.validate_phone(number):
+        if not cls.validate_phone(phone):
             print("Invalid phone number format!!")
             return
         contact = Contact(name=name, email=email, phone=phone, username=username, categories=categories)
@@ -60,7 +60,7 @@ class Contact:
         if not cls.validate_email(email):
             print("Invalid email address")
             return
-        if not cls.validate_phone(number):
+        if not cls.validate_phone(phone):
             print("Invalid phone number format!!")
             return
         contacts = cls.load_from_pickle(username)
@@ -70,8 +70,14 @@ class Contact:
                     if new_name:
                         contact.name = new_name
                     if email:
+                        if not cls.validate_email(email):
+                            print("Invalid email address")
+                            return
                         contact.email = email
                     if phone:
+                        if not cls.validate_phone(phone):
+                            print("Invalid phone number format!!")
+                            return
                         contact.phone = phone
                     if categories:
                         contact.categories = categories
@@ -84,8 +90,14 @@ class Contact:
                 if new_name:
                     contacts.name = new_name
                 if email:
+                    if not cls.validate_email(email):
+                        print("Invalid email address")
+                        return
                     contacts.email = email
                 if phone:
+                    if not cls.validate_phone(phone):
+                        print("Invalid phone number format!!")
+                        return
                     contact.phone = phone
                 if categories:
                     contacts.categories = categories
@@ -183,6 +195,9 @@ class Contact:
 
     @classmethod
     def search_by_email(cls, username, contact_email):
+        if not cls.validate_email(contact_email):
+            print("Invalid email address")
+            return
         ontacts = cls.load_from_pickle(username)
         if isinstance(contacts, list):
             for contact in contacts:
