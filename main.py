@@ -31,6 +31,7 @@ def main_menu():
                 quit()
             case _:
                 print("Invalid choice. Please try again.")
+                main_menu()
 
 
 def sub_menu1(username):
@@ -50,7 +51,7 @@ def sub_menu1(username):
 
     match choice:
         case 1:
-
+            sub_menu2(username)
             sub_menu1(username)
         case 2:
             name = input("Enter contact name: ")
@@ -105,7 +106,7 @@ def sub_menu1(username):
             Contact.view_all_contacts(username)
             sub_menu1(username)
         case 5:
-            fpath = input("Enter your file path or pass( Default path: data/): ")
+            fpath = input("Enter your file path or pass( Default path: data/contact.csv): ")
             if fpath:
                 Contact.save_contact_to_csv(username=username,fpath=fpath)
             else:
@@ -142,7 +143,7 @@ def sub_menu2(username):
             name = input("Enter contact name: ")
             email = input("Enter contact email: ")
             phone = input("Enter contact phone: ")
-            categories = input("Enter contact categories or pass(Default categories is All contact: ")
+            categories = input("Enter contact categories or pass(Default categories is All contact): ")
             if categories:
                 Contact.add_contact(name=name, email=email, phone=phone, username=username,categories=categories)
             else:
@@ -150,7 +151,7 @@ def sub_menu2(username):
             sub_menu2(username)
         case 2:
             fpath = input("Enter your file path or pass( Default path: data/): ")
-            categories = input("Enter contact categories or pass(Default categories is All contact: ")
+            categories = input("Enter contact categories or pass(Default categories is All contact): ")
             if categories:
                 if fpath:
                     Contact.creat_contacts_from_csv(username=username, fpath=fpath, categories=categories)
@@ -171,5 +172,4 @@ def sub_menu2(username):
             sub_menu2(username)
 
 
-if __name__ == "__main__":
-    main_menu()
+main_menu()

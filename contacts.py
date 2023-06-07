@@ -22,7 +22,6 @@ class Contact:
     def load_from_pickle(cls, username):
         with open("data/contacts.pickle", "rb") as f:
             contacts = pickle.load(f)
-
         if isinstance(contacts, list):
             matching_contacts = [contact for contact in contacts if contact.username == username]
             if matching_contacts:
@@ -84,7 +83,7 @@ class Contact:
     def check_contact(cls,username, in_contact):
         contacts = cls.load_from_pickle(username)
         for i, contact in enumerate(contacts):
-            if contact.name == in_contact.name and contact.email == in_contact.email and contact.phone == in_contact.phone:
+            if contact.name == in_contact.name and contact.email == in_contact.email and contact.phone == in_contact.phone and contact.username == in_contact.username:
                 print("Contact already exist!!")
                 return False
         return True
@@ -109,17 +108,21 @@ class Contact:
     @classmethod
     def view_all_contacts(cls, username):
         contacts = cls.load_from_pickle(username)
-        for i, contact in enumerate(contacts):
-            print(f"{i}, {contact}")
+        if contacts:
+            if isinstance(cls.load_from_pickle(username), list):
+                for i, contact in enumerate(contacts):
+                    print(f"{i}, {contact}")
+            else:
+                print(contacts)
 
     @staticmethod
     def save_to_csv(list1, fpath):
         with open(fpath, 'w', newline="") as file:
             writer = csv.writer(file)
-            writer.writerows(list1)
+            writer.writerows([[item] for item in list1])
 
     @classmethod
-    def save_contact_to_csv(cls, username, fpath="data/"):
+    def save_contact_to_csv(cls, username, fpath="data/contact.csv"):
         contacts = cls.load_from_pickle(username)
         str_contacts = cls.obj_to_str(contacts)
         cls.save_to_csv(list1=str_contacts, fpath=fpath)
@@ -128,7 +131,7 @@ class Contact:
     def obj_to_str(contacts):
         lst = [];
         for contact in contacts:
-            lst.append(f"{contact.name}//{contact.email}//{contact.username}//{contact.categories}")
+            lst.append(f"{contact.name}//{contact.email}//{contact.phone}//{contact.username}//{contact.categories}")
         return lst
 
     @staticmethod
@@ -139,14 +142,16 @@ class Contact:
             for row in reader:
                 if row:
                     list1.append(row)
+        print(list1)
         return list1
 
     @classmethod
-    def creat_contacts_from_csv(cls, username, fpath="data/", categories="All contact"):
+    def creat_contacts_from_csv(cls, username, fpath="data/contact.csv", categories="All contact"):
         contacts = cls.read_from_csv(fpath)
-        for contact in contacts:
-            name, email, phone= contact
-            Contact(name=name, email=email, phone=phone, username=username, categories=categories)
+        for row in contacts:
+            contact = row[0]
+            name, email, phone = contact.split("//")
+            contact = cls.add_contact(name=name, email=email, phone=phone, username=username, categories=categories)
 
     @classmethod
     def search_by_name(cls, username, contact_name):
