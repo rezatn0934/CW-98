@@ -105,7 +105,7 @@ class Contact:
             print(f"{i}, {contact}")
 
     @staticmethod
-    def save_to_csv(cls, list, fpath="data/"):
+    def save_to_csv(list, fpath="data/"):
         with open(fpath, 'w', newline="") as file:
             writer = csv.writer(file)
             writer.writerows(str)
@@ -116,7 +116,7 @@ class Contact:
         cls.save_to_csv(contacts)
 
     @staticmethod
-    def read_from_csv(cls,fpath="data/"):
+    def read_from_csv(fpath="data/"):
         list1 = []
         with open(fpath, "r", newline="") as file:
             reader = csv.reader(file)
