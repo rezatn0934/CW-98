@@ -39,7 +39,7 @@ class Contact:
         contact = Contact(name=name, email=email, phone=phone, username=username, categories=categories)
         if "contacts.pickle" in os.listdir("data/"):
             if isinstance(cls.load_from_pickle(username), list):
-                result = cls.check_contact(contact)
+                result = cls.check_contact(username=username,in_contact=contact)
                 contacts = cls.load_from_pickle(username)
                 if result:
                     contacts.append(contact)
@@ -121,7 +121,15 @@ class Contact:
     @classmethod
     def save_contact_to_csv(cls, username, fpath="data/"):
         contacts = cls.load_from_pickle(username)
-        cls.save_to_csv(list1=contacts, fpath=fpath)
+        str_contacts = cls.obj_to_str(contacts)
+        cls.save_to_csv(list1=str_contacts, fpath=fpath)
+
+    @staticmethod
+    def obj_to_str(contacts):
+        lst = [];
+        for contact in contacts:
+            lst.append(f"{contact.name}//{contact.email}//{contact.username}//{contact.categories}")
+        return lst
 
     @staticmethod
     def read_from_csv(fpath):
