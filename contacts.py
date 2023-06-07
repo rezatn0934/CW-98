@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 import pickle
 import os
+import csv
+
 
 
 @dataclass
@@ -29,7 +31,8 @@ class Contact:
                 return [contacts]
 
         print(f"No contacts found for the {username}.")
-        return None
+        return
+
     @classmethod
     def add_contact(cls, username, name, email, phone):
         contact = Contact(name=name, email=email, phone=phone, username=username)
@@ -69,8 +72,6 @@ class Contact:
             else:
                 print("Contact doesn't exist!!!")
 
-
-
     @classmethod
     def check_contact(cls,username, in_contact):
         contacts = cls.load_from_pickle(username)
@@ -102,3 +103,9 @@ class Contact:
         contacts = cls.load_from_pickle(username)
         for i, contact in enumerate(contacts):
             print(f"{i}, {contact}")
+
+    @classmethod
+    def save_to_csv(cls, str, fpath="data/"):
+        with open(fpath, 'w', newline="") as file:
+            writer = csv.writer(file)
+            writer.writerows(str)
