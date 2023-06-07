@@ -8,6 +8,7 @@ class Contact:
     name: str
     email: str
     phone: str
+    username: str
 
     @classmethod
     def save_to_pickle(cls, obj):
@@ -15,29 +16,39 @@ class Contact:
             pickle.dump(obj, f)
 
     @classmethod
-    def load_from_pickle(cls):
+    def load_from_pickle(cls, username):
         with open("data/contacts.pickle", "rb") as f:
-            return pickle.load(f)
+            contacts = pickle.load(f)
 
+        if isinstance(contacts, list):
+            matching_contacts = [contact for contact in contacts if contact.username == username]
+            if matching_contacts:
+                return matching_contacts
+        else:
+            if contacts.username == username:
+                return [contacts]
+
+        print(f"No contacts found for the {username}.")
+        return None
     @classmethod
-    def add_contact(cls, name, email, phone):
-        contact = Contact(name=name, email=email, phone=phone)
+    def add_contact(cls, username, name, email, phone):
+        contact = Contact(name=name, email=email, phone=phone, username=username)
         if "contacts.pickle" in os.listdir("data/"):
-            if isinstance(cls.load_from_pickle(), list):
+            if isinstance(cls.load_from_pickle(username), list):
                 result = cls.check_contact(contact)
-                contacts = cls.load_from_pickle()
+                contacts = cls.load_from_pickle(username)
                 if result:
                     contacts.append(contact)
             else:
-                contacts = [cls.load_from_pickle(), contact]
+                contacts = [cls.load_from_pickle(username), contact]
         else:
             contacts = contact
         cls.save_to_pickle(contacts)
 
     @classmethod
-    def edite_contact(cls, name, email=None, phone=None):
-        contacts = cls.load_from_pickle()
-        if isinstance(cls.load_from_pickle(), list):
+    def edite_contact(cls,username, name, email=None, phone=None):
+        contacts = cls.load_from_pickle(username)
+        if isinstance(cls.load_from_pickle(username), list):
             for num, contact in enumerate(contacts):
                 if contact.name == name:
                     if email:
@@ -62,7 +73,7 @@ class Contact:
 
     @classmethod
     def check_contact(cls, in_contact):
-        contacts = cls.load_from_pickle()
+        contacts = cls.load_from_pickle(username)
         for i, contact in enumerate(contacts):
             if contact.name == in_contact.name and contact.email == in_contact.email and contact.phone == in_contact.phone:
                 print("Contact already exist!!")
@@ -71,7 +82,7 @@ class Contact:
 
     @classmethod
     def delete_contact(cls, contact_name):
-        contacts = cls.load_from_pickle()
+        contacts = cls.load_from_pickle(username)
         if isinstance(contacts, list):
             for index,contact in enumerate(contacts):
                 if contact.name == contact_name:
@@ -86,7 +97,3 @@ class Contact:
             else:
                 print("Contact doesn't exist!!")
 
-
-Contact.add_contact("reza", "152", "456")
-Contact.add_contact("ali", "152", "456")
-print(Contact.load_from_pickle())
