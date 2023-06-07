@@ -105,7 +105,12 @@ class Contact:
             print(f"{i}, {contact}")
 
     @classmethod
-    def save_to_csv(cls, str, fpath="data/"):
+    def save_to_csv(cls, list, fpath="data/"):
         with open(fpath, 'w', newline="") as file:
             writer = csv.writer(file)
             writer.writerows(str)
+
+    @classmethod
+    def save_contact_to_csv(cls, username):
+        contacts = cls.load_from_pickle(username)
+        cls.save_to_csv(contacts)
