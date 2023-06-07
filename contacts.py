@@ -97,3 +97,8 @@ class Contact:
             else:
                 print("Contact doesn't exist!!")
 
+    @classmethod
+    def viwe_all_contacts(cls, username):
+        contacts = cls.load_from_pickle(username)
+        for i, contact in enumerate(contacts):
+            print(f"{i}, {contact}")
