@@ -139,3 +139,18 @@ class Contact:
         for contact in contacts:
             name, email, phone= contact
             Contact(name=name, email=email, phone=phone, username=username, categories=categories)
+
+    @classmethod
+    def search_by_name(cls, username, contact_name):
+        contacts = cls.load_from_pickle(username)
+        if isinstance(contacts, list):
+            for contact in contacts:
+                if contact.name == contact_name:
+                    print(contact)
+                else:
+                    print("Contact doesn't exist!!")
+        else:
+            if contacts.name == contact_name:
+                print(contact)
+            else:
+                print("Contact doesn't exist!!")
