@@ -39,6 +39,9 @@ class Contact:
         if not cls.validate_email(email):
             print("Invalid email address")
             return
+        if not cls.validate_phone(number):
+            print("Invalid phone number format!!")
+            return
         contact = Contact(name=name, email=email, phone=phone, username=username, categories=categories)
         if "contacts.pickle" in os.listdir("data/"):
             if isinstance(cls.load_from_pickle(username), list):
@@ -56,6 +59,9 @@ class Contact:
     def edite_contact(cls,username, name, new_name=None, email=None, phone=None, categories=None):
         if not cls.validate_email(email):
             print("Invalid email address")
+            return
+        if not cls.validate_phone(number):
+            print("Invalid phone number format!!")
             return
         contacts = cls.load_from_pickle(username)
         if isinstance(cls.load_from_pickle(username), list):
@@ -194,4 +200,10 @@ class Contact:
     def validate_email(email):
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         return re.match(pattern, email) is not None
+
+    @staticmethod
+    def validate_phone(phon_number):
+        pattern = r'(?:\+98|0|0098)?9\d{2}-?\d{3}-?\d{4}'
+        match = re.match(pattern, phone_number)
+        return match is not None
 
