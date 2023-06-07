@@ -93,7 +93,7 @@ class Contact:
                     print("Contact doesn't exist!!")
         else:
             if contacts.name == contact_name:
-                os.remove("data/contacts.pickle") # remove nashe
+                cls.save_to_pickle([])
             else:
                 print("Contact doesn't exist!!")
 
