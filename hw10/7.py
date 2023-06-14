@@ -9,7 +9,6 @@ def get_weather_data(city_name: str, api_key: str) -> float | None:
     complete_url = base_url + "?appid=" + api_key + "&q=" + city_name
     try:
         response = requests.get(complete_url, timeout=10)
-        response.raise_for_status()
     except requests.exceptions.HTTPError as e:
         print("Http Error:", e)
         return None
