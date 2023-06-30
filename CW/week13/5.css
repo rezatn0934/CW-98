@@ -1,0 +1,98 @@
+body {
+    background-color: white;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20rem;
+    height: 90vh;
+    border: 1px solid gray;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 300px;
+}
+
+
+.header:last-child {
+    margin-left: auto;
+}
+.page-name {
+    text-align: center;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    display: flex;
+}
+.name {
+    display: flex;
+}
+
+.dot-div {
+    display: flex;
+}
+
+.dot {
+    width: 90px;
+}
+
+.div-logo-name {
+    display: flex;
+    align-items: center;
+}
+
+* {
+    margin: 0;
+}
+.post-div {
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+}
+
+.like-share {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 300px;
+}
+.description {
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+
+}
+
+.description h4 {
+    color: #262626;
+}
+.description h4 strong {
+    color: #262626;
+    font-weight: 400;
+    font-size: large;
+}
+
+.description p {
+    color: #262626;
+}
+.description b {
+    margin-top: 10px;
+    font-weight: 400;
+    color: #141414;
+}
+
+.description {
+    display: flex;
+    height: 125px;
+    flex-direction: column;
+    align-content: space-between;
+    justify-content: space-between;
+}
