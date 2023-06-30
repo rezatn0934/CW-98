@@ -1,0 +1,9 @@
+div:nth-child(even) {
+    color: red;
+}
+div:first-child {
+    color: blue;
+}
+div:last-child {
+    color: green;
+}
