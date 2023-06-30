@@ -1,0 +1,6 @@
+.first p {
+    color: red;
+}
+.second p:first-child {
+    color: blue;
+}
