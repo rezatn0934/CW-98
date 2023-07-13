@@ -21,3 +21,4 @@ class Category(models.Model):
 class Comment(models.Model):
     post = models.CharField(max_length=50)
     author = models.CharField(max_length=50)
+    content = models.TextField()
