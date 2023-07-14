@@ -20,3 +20,8 @@ def view_post_detail(request, pk):
 def view_category(request):
     categorys = Category.objects.all()
     return render(request, 'blog/category.html', {'categorys': categorys})
+
+
+def view_category_detail(request, pk):
+    category = Category.objects.get(pk=pk)
+    return render(request, 'blog/category_detail.html', {'category': category})
