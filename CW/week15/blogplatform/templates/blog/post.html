@@ -8,8 +8,9 @@
         {% for post in posts %}
           <div class="card my-4">
             <div class="card-body">
-                <a class="text-decoration-none" href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
-              <p class="card-text">Author: {{ post.author }}</p>
+                <h3><a class="text-dark text-decoration-none" href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h3>
+                <p2>{{ post.content | truncatewords:5 }}</p2>
+              <p class="card-text">Author: <a class="text-dark text-decoration-none" href="{% url 'author_detail' post.author.pk %}">{{ post.author.name }}</a> | <a class="text-dark text-decoration-none" href="{% url 'category_detail' post.category.pk %}">{{ post.category.name }}</a</p>
             </div>
           </div>
         {% endfor %}

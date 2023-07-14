@@ -1,8 +1,17 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-  <div class="container-md px-5">
-    <div class="row gx-5 justify-content-center">
+  <div class="container-md px-7">
+    <div class="row gx-1 justify-content-center mx-3">
+        <div class="col-lg-4 my-4">
+            {% if author.image %}
+          <img id="profile" class="img-fluid border border-dark rounded-circle mb-3" style="width: 300px; height: 300px;" src="{{ author.image.url }}" alt="author_image">
+                {% else %}
+                <img class="img-fluid border border-dark rounded-circle mb-3" style="width: 300px; height: 300px;" src="{% static 'images/default.png' %}" alt="Default Image">
+
+      {% endif %}
+        </div>
       <div class="col-lg-8">
           <div class="card my-4">
             <div class="card-body">
