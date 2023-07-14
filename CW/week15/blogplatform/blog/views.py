@@ -1,30 +1,30 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Post, Category
 # Create your views here.
 
 
-def view_home(request):
+def home_view(request):
     return render(request, 'blog/home.html')
 
 
-def view_posts(request):
+def posts_view(request):
     posts = Post.objects.all()
     return render(request, 'blog/post.html', {'posts': posts})
 
 
-def view_post_detail(request, pk):
-    post = Post.objects.get(pk=pk)
+def post_detail_view(request, pk):
+    post = get_object_or_404(Post, pk=pk)
     context = {'post': post}
     return render(request, 'blog/post_detail.html', context)
 
 
-def view_categorys(request):
-    categorys = Category.objects.all()
-    context = {'categorys': categorys}
+def categories_view(request):
+    categories = Category.objects.all()
+    context = {'categories': categories}
     return render(request, 'blog/category.html', context)
 
 
-def view_category_detail(request, pk):
+def category_detail_view(request, pk):
     category = Category.objects.get(pk=pk)
     context = {'category': category}
     return render(request, 'blog/category_detail.html', context)
