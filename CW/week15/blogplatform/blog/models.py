@@ -28,4 +28,4 @@ class Comment(models.Model):
     content = models.TextField()
 
     def __str__(self):
-        return self.post + "/" + self.author
+        return f'{self.post}' + "/" + f'{self.author}'
