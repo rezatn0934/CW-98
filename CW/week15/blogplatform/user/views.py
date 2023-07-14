@@ -4,4 +4,9 @@ from .models import Author
 
 def view_author(request):
     authors = Author.objects.all()
-    return render(request, 'blog/author.html', {'poauthorssts': authors})
+    return render(request, 'user/author.html', {'authors': authors})
+
+
+def view_author_detail(request, pk):
+    author = Author.objects.get(pk=pk)
+    return render(request, 'user/author_detail.html', {'author': author})
