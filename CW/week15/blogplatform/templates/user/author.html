@@ -8,7 +8,7 @@
         {% for author in authors %}
           <div class="card my-4">
             <div class="card-body">
-                <a class="text-decoration-none" href="{% url 'author_detail' category.pk %}">{{ author.name }}</a>
+                <a class="text-decoration-none" href="{% url 'author_detail' author.pk %}">{{ author.name }}</a>
             </div>
           </div>
         {% endfor %}
