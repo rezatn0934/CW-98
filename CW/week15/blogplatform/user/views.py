@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .models import Author
 # Create your views here.
 
-def view_author(request):
+def view_authors(request):
     authors = Author.objects.all()
     return render(request, 'user/author.html', {'authors': authors})
 
