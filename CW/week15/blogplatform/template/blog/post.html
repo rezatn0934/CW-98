@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+  <div class="container-md px-5">
+    <div class="row gx-5 justify-content-center">
+      <div class="col-lg-8">
+        {% for post in posts %}
+          <div class="card my-4">
+            <div class="card-body">
+                <a class="text-decoration-none" href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
+{#              <h5 class="card-title"><a href="http://localhost:8000/post/{{ post.pk }}/">{{ post.title }}</a></h5>#}
+              <p class="card-text">{{ post.content }}</p>
+              <p class="card-text">Author: {{ post.author }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
