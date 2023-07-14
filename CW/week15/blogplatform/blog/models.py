@@ -17,8 +17,13 @@ class Category(models.Model):
      name = models.CharField(max_length=50)
      description = models.TextField()
 
+     def __str__(self):
+         return self.name
 
 class Comment(models.Model):
     post = models.CharField(max_length=50)
     author = models.CharField(max_length=50)
     content = models.TextField()
+
+    def __str__(self):
+        return self.post + "/" + self.author
