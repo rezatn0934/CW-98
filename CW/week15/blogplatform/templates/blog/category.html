@@ -5,7 +5,7 @@
   <div class="container-md px-5">
     <div class="row gx-5 justify-content-center">
       <div class="col-lg-8">
-        {% for category in categorys %}
+        {% for category in categories %}
           <div class="card my-4">
             <div class="card-body">
                 <a class="text-decoration-none" href="{% url 'category_detail' category.pk %}">{{ category.name }}</a>

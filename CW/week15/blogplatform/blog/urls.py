@@ -2,13 +2,13 @@
 
 from django.contrib import admin
 from django.urls import path
-from .views import view_home, view_posts, view_post_detail, view_categorys, view_category_detail
+from . import views
 
 
 urlpatterns = [
-    path('', view_home, name='home'),
-    path('posts/', view_posts, name='posts'),
-    path('post/<int:pk>/', view_post_detail, name='post_detail'),
-    path('categorys/', view_categorys, name='categorys'),
-    path('category/<int:pk>/', view_category_detail, name='category_detail'),
+    path('', views.home_view, name='home'),
+    path('posts/', views.posts_view, name='posts'),
+    path('post/<int:pk>/', views.post_detail_view, name='post_detail'),
+    path('categories/', views.categories_view, name='categories'),
+    path('category/<int:pk>/', views.category_detail_view, name='category_detail'),
 ]
