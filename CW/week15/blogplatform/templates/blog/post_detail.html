@@ -8,8 +8,17 @@
             <div class="card-body">
               <h5 class="card-title">{{ post.title }}</h5>
               <p class="card-text">{{ post.content }}</p>
-              <p class="card-text">{{ post.author }} | {{ post.publication_date }}</p>
+              <p class="card-text"><a class="text-dark text-decoration-none" href="{% url 'author_detail' post.author.pk %}">{{ post.author.name }}</a> | {{ post.publication_date }} | <a class="text-dark text-decoration-none" href="{% url 'category_detail' post.category.pk %}">{{ post.category.name }}</a></p>
             </div>
+          </div>
+          <div class="bg-secondary shadow bg-gradient my-3 py-3 px-3">
+                <p>Comments:</p>
+                {% for comment in comments %}
+                    <div  class="bg-light my-3 py-3 px-3">
+                        <p>{{ comment.content }}</p>
+                        <small>Written by: {{ comment.author }}</small>
+                    </div>
+                {% endfor %}
           </div>
       </div>
     </div>
