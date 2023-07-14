@@ -7,21 +7,24 @@ def view_home(request):
     return render(request, 'blog/home.html')
 
 
-def view_post(request):
+def view_posts(request):
     posts = Post.objects.all()
     return render(request, 'blog/post.html', {'posts': posts})
 
 
 def view_post_detail(request, pk):
     post = Post.objects.get(pk=pk)
-    return render(request, 'blog/post_detail.html', {'post': post})
+    context = {'post': post}
+    return render(request, 'blog/post_detail.html', context)
 
 
-def view_category(request):
+def view_categorys(request):
     categorys = Category.objects.all()
-    return render(request, 'blog/category.html', {'categorys': categorys})
+    context = {'categorys': categorys}
+    return render(request, 'blog/category.html', context)
 
 
 def view_category_detail(request, pk):
     category = Category.objects.get(pk=pk)
-    return render(request, 'blog/category_detail.html', {'category': category})
+    context = {'category': category}
+    return render(request, 'blog/category_detail.html', context)
