@@ -10,3 +10,7 @@ def view_home(request):
 def view_post(request):
     posts = Post.objects.all()
     return render(request, 'blog/post.html', {'posts': posts})
+
+def view_post_detail(request, pk):
+    post = Post.objects.get(pk=pk)
+    return render(request, 'blog/post_detail.html', {'post': post})
