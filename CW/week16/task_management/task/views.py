@@ -90,19 +90,25 @@ def tasks_tale_view(request, pk):
         }
         return render(request, 'task/task_detail.html', context)
     elif request.method == 'POST':
-        task = get_object_or_404(Task, pk=pk)
-        task.title = request.POST.get('task_name')
-        task.description = request.POST.get('task_description')
-        task.status = request.POST.get('status')
-        task.category = get_object_or_404(Category, pk=request.POST.get('category'))
-        task.due_date = request.POST.get('due_date')
-        task.save()
-        task.tag.clear()
-        tag_ids = map(int, request.POST.getlist('tags'))
-        tags = Tag.objects.filter(id__in=tag_ids)
-        for tag in tags:
-            task.tag.add(tag)
-        return redirect(request.path)
+        print(request.POST)
+        if 'create_tag' in request.POST:
+            tas_label = request.POST.get('tag_label')
+            Tag.objects.create(label=tas_label)
+            return redirect(request.path)
+        elif 'update_task' in request.POST:
+            task = get_object_or_404(Task, pk=pk)
+            task.title = request.POST.get('task_name')
+            task.description = request.POST.get('task_description')
+            task.status = request.POST.get('status')
+            task.category = get_object_or_404(Category, pk=request.POST.get('category'))
+            task.due_date = request.POST.get('due_date')
+            task.save()
+            task.tag.clear()
+            tag_ids = map(int, request.POST.getlist('tags'))
+            tags = Tag.objects.filter(id__in=tag_ids)
+            for tag in tags:
+                task.tag.add(tag)
+            return redirect(request.path)
 
 
 def task_search_view(request):
@@ -158,3 +164,4 @@ def category_detail_view(request, pk):
         category.description = request.POST.get('category_description')
         category.save()
         return redirect(request.path)
+
