@@ -62,19 +62,47 @@ def all_seeing_eye_view(request):
         task_title = request.POST.get('task_name')
         task_description = request.POST.get('task_description')
         status = request.POST.get('status')
-        category = request.POST.get('category')
-        task = Task.objects.create(title=task_title, description=task_description, category=category, status=status)
-        for i in map(int,request.POST.getlist('tags')):
-            task.tag.add(Tag.objects.filter(pk=i))
+        category = get_object_or_404(Category, pk=request.POST.get('category'))
+        due_date = request.POST.get('due_date')
+        task = Task.objects.create(title=task_title, description=task_description, category=category, status=status, due_date=due_date)
+        tag_ids = map(int, request.POST.getlist('tags'))
+        tags = Tag.objects.filter(id__in=tag_ids)
+        for tag in tags:
+            task.tag.add(tag)
         return redirect(request.path)
 
 
-
-
 def tasks_tale_view(request, pk):
-    task = get_object_or_404(Task, pk=pk)
-    context = {'task': task}
-    return render(request, 'task/task_detail.html', context)
+    if request.method == 'GET':
+        task = get_object_or_404(Task, pk=pk)
+        stats = []
+        status_label = []
+        for i in Task.STATUS_CHOICES:
+            status_label.append(i[0])
+            stats.append(i[0])
+        tags = Tag.objects.all()
+        categories = Category.objects.all()
+        context = {
+            'task': task,
+            'tags': list(tags),
+            'stats': stats,
+            'categories': categories,
+        }
+        return render(request, 'task/task_detail.html', context)
+    elif request.method == 'POST':
+        task = get_object_or_404(Task, pk=pk)
+        task.title = request.POST.get('task_name')
+        task.description = request.POST.get('task_description')
+        task.status = request.POST.get('status')
+        task.category = get_object_or_404(Category, pk=request.POST.get('category'))
+        task.due_date = request.POST.get('due_date')
+        task.save()
+        task.tag.clear()
+        tag_ids = map(int, request.POST.getlist('tags'))
+        tags = Tag.objects.filter(id__in=tag_ids)
+        for tag in tags:
+            task.tag.add(tag)
+        return redirect(request.path)
 
 
 def task_search_view(request):
