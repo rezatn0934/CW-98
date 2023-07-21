@@ -82,10 +82,17 @@ def categories_view(request):
 
 
 def category_detail_view(request, pk):
-    category = Category.objects.get(pk=pk)
-    tasks = Task.objects.filter(category=category)
-    paginator = Paginator(tasks, 3)
-    page_number = request.GET.get('page', 1)
-    tasks = paginator.get_page(page_number)
-    context = {'category': category, 'tasks': tasks}
+    if request.method == 'GET':
+        category = Category.objects.get(pk=pk)
+        tasks = Task.objects.filter(category=category)
+        paginator = Paginator(tasks, 3)
+        page_number = request.GET.get('page', 1)
+        tasks = paginator.get_page(page_number)
+        context = {'category': category, 'tasks': tasks}
+    elif request.method == 'POST':
+        categories_name = request.POST.get('category_name')
+        categories_description = request.POST.get('category_description')
+        Category.objects.create(name=categories_name, description=categories_description)
+        return redirect('category_detail', pk=pk)
+
     return render(request, 'task/category_details.html', context)
