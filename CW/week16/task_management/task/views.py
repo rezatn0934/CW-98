@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
-from .models import Task, Category
+from .models import Task, Category, Tag
 
 
 # Create your views here.
@@ -21,25 +21,54 @@ def home_view(request):
 
 
 def all_seeing_eye_view(request):
-    sort = request.GET.get('sort', 'title')
-    order = request.GET.get('order', 'asc')
-    if sort == 'title' or sort == 'status' or sort == 'due_date':
-        sort_param = sort if order == 'asc' else '-' + sort
-        tasks = Task.objects.order_by(sort_param)
-    else:
-        tasks = Task.objects.all()
+    if request.method == 'GET':
+        sort = request.GET.get('sort', 'title')
+        order = request.GET.get('order', 'asc')
+        if sort == 'title' or sort == 'status' or sort == 'due_date':
+            sort_param = sort if order == 'asc' else '-' + sort
+            tasks = Task.objects.order_by(sort_param)
+            stats = []
+            status_label = []
+            for i in Task.STATUS_CHOICES:
+                status_label.append(i[0])
+                stats.append(i[0])
+            tags = Tag.objects.all()
+            categories = Category.objects.all()
+        else:
+            tasks = Task.objects.all()
+            stats = []
+            status_label = []
+            for i in Task.STATUS_CHOICES:
+                status_label.append(i[0])
+                stats.append(i[0])
+            tags = Tag.objects.all()
+            categories = Category.objects.all()
 
-    paginator = Paginator(tasks, 5)
-    page_number = request.GET.get('page', 1)
-    tasks = paginator.get_page(page_number)
+        paginator = Paginator(tasks, 5)
+        page_number = request.GET.get('page', 1)
+        tasks = paginator.get_page(page_number)
 
-    context = {
-        'tasks': tasks,
-        'order': 'desc' if order == 'asc' else 'asc',
-        'sort': sort,
-        'page': page_number
-    }
-    return render(request, 'task/tasks_list.html', context)
+        context = {
+            'tasks': tasks,
+            'order': 'desc' if order == 'asc' else 'asc',
+            'sort': sort,
+            'page': page_number,
+            'tags': list(tags),
+            'stats': stats,
+            'categories': categories,
+        }
+        return render(request, 'task/tasks_list.html', context)
+    elif request.method == 'POST':
+        task_title = request.POST.get('task_name')
+        task_description = request.POST.get('task_description')
+        status = request.POST.get('status')
+        category = request.POST.get('category')
+        task = Task.objects.create(title=task_title, description=task_description, category=category, status=status)
+        for i in map(int,request.POST.getlist('tags')):
+            task.tag.add(Tag.objects.filter(pk=i))
+        return redirect(request.path)
+
+
 
 
 def tasks_tale_view(request, pk):
@@ -76,23 +105,28 @@ def task_search_view(request):
 
 
 def categories_view(request):
-    categories = Category.objects.all()
-    context = {'categories': categories}
-    return render(request, 'task/category.html', context)
+    if request.method == 'GET':
+        categories = Category.objects.all()
+        context = {'categories': categories}
+        return render(request, 'task/category.html', context)
+    elif request.method == 'POST':
+        categories_name = request.POST.get('category_name')
+        categories_description = request.POST.get('category_description')
+        Category.objects.create(name=categories_name, description=categories_description)
+        return redirect(request.path)
 
 
 def category_detail_view(request, pk):
+    category = Category.objects.get(pk=pk)
     if request.method == 'GET':
-        category = Category.objects.get(pk=pk)
         tasks = Task.objects.filter(category=category)
         paginator = Paginator(tasks, 3)
         page_number = request.GET.get('page', 1)
         tasks = paginator.get_page(page_number)
         context = {'category': category, 'tasks': tasks}
+        return render(request, 'task/category_details.html', context)
     elif request.method == 'POST':
-        categories_name = request.POST.get('category_name')
-        categories_description = request.POST.get('category_description')
-        Category.objects.create(name=categories_name, description=categories_description)
-        return redirect('category_detail', pk=pk)
-
-    return render(request, 'task/category_details.html', context)
+        category.name = request.POST.get('category_name')
+        category.description = request.POST.get('category_description')
+        category.save()
+        return redirect(request.path)

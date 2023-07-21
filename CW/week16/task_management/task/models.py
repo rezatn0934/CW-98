@@ -31,7 +31,7 @@ class Task(models.Model):
     ]
     title = models.CharField(max_length=50)
     description = models.TextField()
-    due_date = models.DateTimeField()
+    due_date = models.DateField()
     status = models.CharField(
         max_length=1, choices=STATUS_CHOICES, default=STATUS_UNASSIGNED)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
