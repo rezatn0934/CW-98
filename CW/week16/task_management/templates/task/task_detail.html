@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        body {
+            background-image: url("{% static 'image/img-05.jpg' %}") !important;
+        }
+
+        /* make the content take up more vertical space */
+        .content-wrapper {
+            min-height: calc(100vh - 200px); /* adjust the value as needed */
+        }
+
+        /* style for the card */
+        .card {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .card-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .card-text {
+            font-size: 1.5rem;
+            color: #555;
+            margin-bottom: .8rem;
+        }
+
+        .card-tag {
+            font-size: 1.3rem;
+            color: #6c5555;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-small {
+            font-size: 1.2rem;
+            color: #777;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="content-wrapper">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 align-items-center my-5">
+                <div class="col-lg-7">
+                </div>
+                <div class="col-lg-5">
+                    <div class="card bg-dark bg-gradient">
+                        <div class="card-body text-white">
+                            <h5 class="card-title text-center">{{ task.title }}</h5>
+                            <p class="card-text text-light">{{ task.description }}</p>
+                            <p class="card-tag">Category:<a class="text-decoration-none"
+                                               href="{% url 'category_detail' task.category.id %}" style="color: #6c5555;">{{ task.category }}</a> | Tags:
+                                {% for tag in task.tag.all %}
+                                   # {{ tag.label }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </p>
+                            <p class="card-small">Status: {{ task.get_status_display }}</p>
+                            <p class="card-small">Due date: {{ task.due_date }}</p>
+                            <div class="card-footer">
+                                <a class="btn btn-secondary rounded-3 btn-sm" href="{% url 'task_list' %}">Go to task list</a>
+                                <a class="btn btn-secondary rounded-3 btn-sm" href="{% url 'home_page' %}">Back to home</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

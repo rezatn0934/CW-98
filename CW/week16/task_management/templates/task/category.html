@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <section class="vh-100" style="background-color: grey;">
+        <div class="container py-5 h-100">
+            <div class="row gx-5 justify-content-center">
+                <div class="col-lg-5">
+                    {% for category in categories %}
+                        <div class="card my-4 justify-content-center" style="background: rgba(50, 100, 150, .3)">
+                            <div class="card-body ">
+                                <h5 class="card-title text-center" >
+                                    <a class="text-decoration-none text-dark"
+                                   href="{% url 'category_detail' category.pk %}">{{ category.name }}</a>
+                                </h5>
+                                <p class="card-text text-light">{{ category.description|truncatewords:5 }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
