@@ -29,3 +29,7 @@ def user_login(request):
             return redirect('dashboard')
     form = LoginForm()
     return render(request, "user/login.html", {"message": message, "form": form})
+
+
+def dashboard(request):
+    return render(request, "user/dashboard.html")
