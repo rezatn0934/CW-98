@@ -27,5 +27,6 @@ def categories_view(request):
 
 def category_detail_view(request, pk):
     category = Category.objects.get(pk=pk)
-    context = {'category': category}
-    return render(request, 'blog/category_detail.html', context)
+    posts = Post.objects.filter(category=category)
+    context = {'category': category, 'posts': posts}
+    return render(request, 'category_details.html', context)

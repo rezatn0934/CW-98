@@ -12,11 +12,11 @@
             </div>
           </div>
           <div class="bg-secondary shadow bg-gradient my-3 py-3 px-3">
-                <p>Comments:</p>
+                <p class="text-light">Comments:</p>
                 {% for comment in comments %}
                     <div  class="bg-light my-3 py-3 px-3">
                         <p>{{ comment.content }}</p>
-                        <small>Written by: {{ comment.author }}</small>
+                        <small>Written by: {{ comment.author.name }}</small>
                     </div>
                 {% endfor %}
           </div>

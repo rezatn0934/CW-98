@@ -15,6 +15,28 @@
         .clor {
             background: linear-gradient(to right top, black, darkslategray, bisque, gray, darkolivegreen);
         }
+
+        #flex-container {
+            display: flex;
+            flex-direction: column;
+
+            /* fallback height */
+            min-height: 100vh;
+
+            /* new small viewport height for modern browsers */
+            min-height: 100svh;
+        }
+
+        #flex-container > footer {
+            margin-top: auto;
+        }
+        #footer {
+   position:absolute;
+   bottom:0;
+   width:100%;
+   height:60px;   /* Height of the footer */
+   background:#6cf;
+}
     </style>
     {% block style %}
     {% endblock %}
@@ -33,18 +55,21 @@
                                         href="{% url 'home_page' %}">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'task_list' %}">Tasks</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'search' %}">Search specific Task</a></li>
-            {% block nav %}
-            {% endblock %}
+                {% block nav %}
+                {% endblock %}
             </ul>
         </div>
     </div>
 </nav>
 <!-- Page Content-->
-{% block content %}
-{% endblock %}
+<div id="flex-container">
+    {% block content %}
+    {% endblock %}
+</div>
+
 
 <!-- Footer-->
-<footer class="py-5 bg-dark">
+<footer id="footer" class="py-5 bg-dark">
     <div class="container px-4 px-lg-5"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p>
     </div>
 </footer>

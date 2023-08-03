@@ -8,3 +8,6 @@ class Author(models.Model):
     email = models.EmailField()
     bio = models.TextField()
     image = models.ImageField(upload_to='images/', null=True, blank=True)
+
+    def __str__(self):
+        return self.name

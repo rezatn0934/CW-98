@@ -2,8 +2,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import Task, Category, Tag
-
-
 # Create your views here.
 
 
@@ -114,22 +112,25 @@ def tasks_tale_view(request, pk):
 def task_search_view(request):
     search_query = request.GET.get('search')
     checkbox = request.GET.getlist('checkbox')
-    if search_query:
-        if ('a' in checkbox) and ('b' in checkbox) and ('c' in checkbox):
-            search_results = Task.objects.filter(
-                Q(title__icontains=search_query) | Q(tag__label__icontains=search_query) | Q(description__icontains=search_query)).distinct()
-        elif ('a' in checkbox) and ('b' in checkbox) and not ('c' in checkbox):
-            search_results = Task.objects.filter(
-                Q(title__icontains=search_query) | Q(description__icontains=search_query)).distinct()
-        elif ('a' in checkbox) and ('c' in checkbox) and not ('b' in checkbox):
-            search_results = Task.objects.filter(
-                Q(title__icontains=search_query) | Q(tag__label__icontains=search_query)).distinct()
-        elif ('b' in checkbox) and ('c' in checkbox) and not ('a' in checkbox):
-            search_results = Task.objects.filter(
-                Q(description__icontains=search_query) | Q(tag__label__icontains=search_query)).distinct()
-        else:
-            search_results = Task.objects.filter(Q(title__icontains=search_query) | Q(description__icontains=search_query) | Q(tag__label__icontains=search_query)).distinct()
+    if request.method == 'GET':
+        if search_query:
+            query_list = []
 
+            if 'a' in checkbox:
+                query_list.append(Q(name__icontains=search_query))
+            if 'b' in checkbox:
+                query_list.append(Q(description__icontains=search_query))
+            if 'c' in checkbox:
+                query_list.append(Q(category__name__icontains=search_query))
+
+            if not query_list:
+                query_list.append(Q(name__icontains=search_query) |
+                                  Q(description__icontains=search_query) |
+                                  Q(category__name__icontains=search_query))
+
+            products = Product.objects.filter(*query_list).distinct()
+        else:
+            products = None
         paginator = Paginator(search_results, 3)
         page_number = request.GET.get('page', 1)
         search_results = paginator.get_page(page_number)
