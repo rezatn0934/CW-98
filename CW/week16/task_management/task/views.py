@@ -128,9 +128,9 @@ def task_search_view(request):
                                   Q(description__icontains=search_query) |
                                   Q(category__name__icontains=search_query))
 
-            products = Product.objects.filter(*query_list).distinct()
+            search_results = Task.objects.filter(*query_list).distinct()
         else:
-            products = None
+            search_results = None
         paginator = Paginator(search_results, 3)
         page_number = request.GET.get('page', 1)
         search_results = paginator.get_page(page_number)
