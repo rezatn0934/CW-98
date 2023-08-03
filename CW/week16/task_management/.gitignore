@@ -1,3 +1,7 @@
 .idea
-/task/migrations/
 CW
+**/migrations/
+__pycache__/
+**/__pycache__/
+*/__pycache__/
+*/migrations/
