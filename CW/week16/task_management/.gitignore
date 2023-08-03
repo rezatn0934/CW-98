@@ -3,7 +3,6 @@
 CW
 user/migrations
 task/migrations
-../../../New folder/BlogPlatformProjec
 __pycache__/
 **/__pycache__/
 */__pycache__/
