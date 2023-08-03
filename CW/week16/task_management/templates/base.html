@@ -15,28 +15,6 @@
         .clor {
             background: linear-gradient(to right top, black, darkslategray, bisque, gray, darkolivegreen);
         }
-
-        #flex-container {
-            display: flex;
-            flex-direction: column;
-
-            /* fallback height */
-            min-height: 100vh;
-
-            /* new small viewport height for modern browsers */
-            min-height: 100svh;
-        }
-
-        #flex-container > footer {
-            margin-top: auto;
-        }
-        #footer {
-   position:absolute;
-   bottom:0;
-   width:100%;
-   height:60px;   /* Height of the footer */
-   background:#6cf;
-}
     </style>
     {% block style %}
     {% endblock %}
@@ -54,7 +32,8 @@
                 <li class="nav-item"><a class="nav-link active" aria-current="page"
                                         href="{% url 'home_page' %}">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'task_list' %}">Tasks</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'search' %}">Search specific Task</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'search' %}">Search</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
                 {% block nav %}
                 {% endblock %}
             </ul>
