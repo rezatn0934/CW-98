@@ -1,8 +1,6 @@
 .idea
-/task/migrations/
 CW
-user/migrations
-task/migrations
+**/migrations/
 __pycache__/
 **/__pycache__/
 */__pycache__/
