@@ -45,3 +45,12 @@ class LoginForm(forms.ModelForm):
             'password': forms.PasswordInput(
                 attrs={'class': 'form-control', 'placeholder': 'Password', 'style': 'text-align: center;'}),
         }
+
+    def clean(self):
+        cleaned_data = {'username': self['username'].value(), 'password': self['password'].value()}
+        username1 = cleaned_data["username"]
+        user = CustomUser.objects.filter(Q(username=username1) | Q(email=username1)).get()
+
+        if user.check_password(cleaned_data['password']):
+            cleaned_data['user'] = user
+            return cleaned_data
