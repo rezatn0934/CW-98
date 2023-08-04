@@ -6,9 +6,14 @@ from .models import Task, Category, Tag
 
 
 def home_view(request):
-    tasks = Task.objects.all().order_by('due_date')
-
-    first_task = tasks[0]
+    if request.user.is_authenticated:
+        tasks = Task.objects.filter(user=request.user).order_by('due_date').distinct()
+    else:
+        tasks = Task.objects.all().order_by('due_date')
+    if tasks:
+        first_task = tasks[0]
+    else:
+        first_task = None
 
     paginator = Paginator(tasks[1:], 6)
     page_number = request.GET.get('page', 1)
@@ -128,12 +133,12 @@ def task_search_view(request):
                                   Q(description__icontains=search_query) |
                                   Q(category__name__icontains=search_query))
 
-            products = Product.objects.filter(*query_list).distinct()
+            search_results = Task.objects.filter(*query_list).distinct()
+            paginator = Paginator(search_results, 3)
+            page_number = request.GET.get('page', 1)
+            search_results = paginator.get_page(page_number)
         else:
-            products = None
-        paginator = Paginator(search_results, 3)
-        page_number = request.GET.get('page', 1)
-        search_results = paginator.get_page(page_number)
+            search_results = None
     else:
         search_results = None
     return render(request, 'task/search.html', {'search_query': search_query, 'search_results': search_results})

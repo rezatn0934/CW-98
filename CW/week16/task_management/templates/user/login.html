@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/task_detail.css' %}">
+    <style>
+        body {
+            background-image: url("{% static 'image/img-05.jpg' %}") !important;
+            background-repeat: no-repeat !important;
+            background-size: cover !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="content-wrapper">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 align-items-center my-5">
+                <div class="col-lg-7">
+                </div>
+                <div class="col-lg-5">
+                    <div class="card bg-dark bg-gradient">
+                        <div class="card-body text-white">
+                            <form action="" method="POST">
+                                <h5 class="card-title text-center">Login/register Form</h5>
+                                {% csrf_token %}
+                                {% for field in form %}
+                                    <div class="fieldWrapper">
+                                        {{ field.errors }}
+                                        {{ field.label_tag }} {{ field }}
+                                    </div>
+                                {% endfor %}
+                                <div class="card-footer d-flex justify-content-between">
+                                    <button type="submit" class="btn btn-primary me-2">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
