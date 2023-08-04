@@ -8,6 +8,13 @@ class CreatTaskForm(forms.ModelForm):
         fields = '__all__'
 
 
+class CreateCategoryForm(forms.Form):
+    name = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Name', 'style': 'text-align: center;'}))
+    description = forms.CharField(widget=forms.Textarea(
+        attrs={'class': 'form-control', 'placeholder': 'Description', 'style': 'text-align: center;'}))
+
+
 class UpdateCategoryForm(forms.ModelForm):
     class Meta:
         model = Category
