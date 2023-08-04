@@ -21,3 +21,16 @@ def user_login(request):
     return render(request, "user/login.html", {"message": message, "form": form})
 
 
+def register_user(request):
+    message = None
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.password = make_password(form.cleaned_data['password'])
+            user.save()
+            login(request, user, backend='user.authentication.AuthBackend')
+            return redirect('/')
+    elif request.method == "GET":
+        form = UserForm()
+    return render(request, "user/login.html", {"message": message, "form": form})
