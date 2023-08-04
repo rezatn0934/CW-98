@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import Task, Category, Tag
-from .forms import CreatTaskForm
+from .forms import CreatTaskForm, UpdateCategoryForm
 # Create your views here.
 
 
@@ -156,16 +156,19 @@ def categories_view(request):
 
 def category_detail_view(request, pk):
     category = Category.objects.get(pk=pk)
+    tasks = Task.objects.filter(category=category)
+    paginator = Paginator(tasks, 3)
+    page_number = request.GET.get('page', 1)
+    tasks = paginator.get_page(page_number)
     if request.method == 'GET':
-        tasks = Task.objects.filter(category=category)
-        paginator = Paginator(tasks, 3)
-        page_number = request.GET.get('page', 1)
-        tasks = paginator.get_page(page_number)
-        context = {'category': category, 'tasks': tasks}
+        form = UpdateCategoryForm(instance=category)
+        context = {'category': category, 'tasks': tasks, 'form': form}
         return render(request, 'task/category_details.html', context)
     elif request.method == 'POST':
+        form = UpdateCategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
         category.name = request.POST.get('category_name')
         category.description = request.POST.get('category_description')
         category.save()
-        return redirect(request.path)
-
+        return redirect('task/category_details.html', pk=category.id)
