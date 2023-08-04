@@ -8,6 +8,14 @@ class CreatTaskForm(forms.ModelForm):
         fields = '__all__'
 
 
+class UpdateTaskForm(forms.Form):
+    title = forms.CharField()
+    due_date = forms.DateField()
+    description = forms.CharField()
+    category = forms.ModelChoiceField(queryset=Category.objects.all())
+    tag = forms.ModelMultipleChoiceField(queryset=Tag.objects.all())
+
+
 class CreateCategoryForm(forms.Form):
     name = forms.CharField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Name', 'style': 'text-align: center;'}))
