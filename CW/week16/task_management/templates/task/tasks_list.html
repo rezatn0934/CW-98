@@ -22,71 +22,12 @@
                                     <div class="card card-body">
                                         <form action="{% url 'task_list' %}" method="POST">
                                             {% csrf_token %}
-                                            <div class="row g-3 mt-2 flex-wrap">
-                                                <div class="col-md-4">
-                                                    <div class="form-group text-dark">
-                                                        <label for="task_name"></label>
-                                                        <input type="text" class="form-control" id="task_name"
-                                                               placeholder="Task title:"
-                                                               name="task_name">
-                                                    </div>
+                                            {% for field in form %}
+                                                <div class="fieldWrapper">
+                                                    {{ field.errors }}
+                                                    {{ field.label_tag }} {{ field }}
                                                 </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="task_description"></label>
-                                                        <textarea class="form-control" id="task_description"
-                                                                  placeholder="Task description:"
-                                                                  name="task_description"></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <select id="select" class="form-select" multiple
-                                                                aria-label="multiple select example" name="tags">
-                                                            <option selected>Select task tag(multi choice):</option>
-
-                                                            {% for tag in tags %}
-                                                                <option value="{{ tag.id }}"> {{ tag.label }} </option>
-                                                            {% endfor %}
-                                                        </select>
-                                                        <label for="select" class="form-label select-label"></label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="status"></label>
-                                                        <select id="status" class="form-select" name="status">
-                                                            <option value="" selected disabled>Select task status:
-                                                            </option>
-                                                            {% for stat in stats %}
-                                                                <option value="{{ stat }}">{{ stat }}</option>
-                                                            {% endfor %}
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <select id="select" class="form-select" name="category">
-                                                            <option selected>Select task category:</option>
-                                                            {% for category in categories %}
-                                                                <option value="{{ category.id }}"> {{ category.name }} </option>
-                                                            {% endfor %}
-                                                        </select>
-                                                        <label for="select" class="form-label select-label"></label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="formGroupExampleInput3"></label>
-                                                        <input required type="date" class="form-control"
-                                                               id="formGroupExampleInput3" placeholder="due_date" value="{{task.due_date|date:'Y-m-d'}}"
-                                                               name="due_date">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <button class="btn btn-secondary btn-block">Add</button>
-                                            </div>
+                                            {% endfor %}
                                         </form>
                                     </div>
                                 </div>
@@ -150,6 +91,7 @@
                                                 <li class="page-item">
                                                     <a class="page-link" href="?page=
 
+
                                                             {{ tasks.previous_page_number }}{% if sort %}&sort={{ sort }}{% endif %}&order={% if order == 'asc' %} {{ 'desc' }} {% elif order == 'desc' %}{{ 'asc' }}{% endif %}">prev</a>
                                                 </li>
                                             {% else %}
@@ -166,6 +108,7 @@
                                                     <li class="page-item">
                                                         <a class="page-link" href="?page=
 
+
                                                                 {{ page }}{% if sort %}&sort={{ sort }}{% endif %}&order={% if order == 'asc' %} {{ 'desc' }} {% elif order == 'desc' %}{{ 'asc' }}{% endif %}">{{ page }}</a>
                                                     </li>
                                                 {% endif %}
@@ -173,6 +116,7 @@
                                             {% if tasks.has_next %}
                                                 <li class="page-item">
                                                     <a class="page-link" href="?page=
+
 
                                                             {{ tasks.next_page_number }}{% if sort %}&sort={{ sort }}{% endif %}&order={% if order == 'asc' %} {{ 'desc' }} {% elif order == 'desc' %}{{ 'asc' }}{% endif %}">next</a>
                                                 </li>
