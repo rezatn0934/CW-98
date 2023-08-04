@@ -29,7 +29,7 @@
                                         {% csrf_token %}
                                         <input type="hidden" name="create_tag" value="create_tag">
                                         <div class="row g-3 mt-2 flex-wrap">
-                                            {% for field in form %}
+                                            {% for field in form1 %}
                                                 <div class="fieldWrapper">
                                                     {{ field.errors }}
                                                     {{ field.label_tag }} {{ field }}
@@ -55,82 +55,12 @@
                                     <form action="{% url 'task_detail' task.id %}" method="POST">
                                         {% csrf_token %}
                                         <input type="hidden" name="update_task" value="create_tag">
-                                        <div class="row g-3 mt-2 flex-wrap">
-                                            <div class="col-md-4">
-                                                <div class="form-group text-dark">
-                                                    <label for="task_name"></label>
-                                                    <input type="text" class="form-control" id="task_name"
-                                                           placeholder="Task title:" value="{{ task.title }}"
-                                                           name="task_name">
-                                                </div>
+                                        {% for field in form2 %}
+                                            <div class="fieldWrapper">
+                                                {{ field.errors }}
+                                                {{ field.label_tag }} {{ field }}
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="task_description"></label>
-                                                    <textarea class="form-control" id="task_description"
-                                                              placeholder="Task description:"
-                                                              name="task_description">{{ task.description }}</textarea>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <select id="select" class="form-select" multiple
-                                                            aria-label="multiple select example" name="tags">
-                                                        <option selected>Select task tag(multi choice):</option>
-                                                        {% for tag in tags %}
-                                                            {% if tag in task.tag.all %}
-                                                                <option value="{{ tag.id }}"
-                                                                        selected> {{ tag.label }} </option>
-                                                            {% else %}
-                                                                <option value="{{ tag.id }}"> {{ tag.label }} </option>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </select>
-                                                    <label for="select" class="form-label select-label"></label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="status"></label>
-                                                    <select id="status" class="form-select" name="status">
-                                                        <option value="" selected disabled>Select task status:
-                                                        </option>
-                                                        {% for stat in stats %}
-                                                            {% if stat == task.status %}
-                                                                <option value="{{ stat }}" selected>{{ stat }}</option>
-                                                            {% else %}
-                                                                <option value="{{ stat }}">{{ stat }}</option>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <select id="select" class="form-select" name="category">
-                                                        <option selected>Select task category:</option>
-                                                        {% for category in categories %}
-                                                            {% if category.id == task.category.id %}
-                                                                <option value="{{ category.id }}"
-                                                                        selected> {{ category.name }} </option>
-                                                            {% else %}
-                                                                <option value="{{ category.id }}"> {{ category.name }} </option>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </select>
-                                                    <label for="select" class="form-label select-label"></label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="formGroupExampleInput3"></label>
-                                                    <input required type="date" class="form-control"
-                                                           id="formGroupExampleInput3" placeholder="due_date"
-                                                           value="{{ task.due_date|date:'Y-m-d' }}"
-                                                           name="due_date">
-                                                </div>
-                                            </div>
-                                        </div>
+                                        {% endfor %}
                                         <div class="col-md-4">
                                             <button class="btn btn-secondary btn-block">Update task</button>
                                         </div>
