@@ -34,3 +34,8 @@ def register_user(request):
     elif request.method == "GET":
         form = UserForm()
     return render(request, "user/login.html", {"message": message, "form": form})
+
+
+def log_out(request):
+    logout(request)
+    return redirect('login')
