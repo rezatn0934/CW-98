@@ -22,8 +22,8 @@ class UpdateCategoryForm(forms.ModelForm):
 
 class CreateTagForm(forms.ModelForm):
     class Meta:
-        model = Category
-        fields = 'label'
+        model = Tag
+        fields = ('label',)
         widgets = {
             'label': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Name', 'style': 'text-align: center;'})
