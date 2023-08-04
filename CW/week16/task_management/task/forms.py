@@ -26,5 +26,5 @@ class CreateTagForm(forms.ModelForm):
         fields = ('label',)
         widgets = {
             'label': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'Name', 'style': 'text-align: center;'})
+                attrs={'class': 'form-control', 'placeholder': 'Label', 'style': 'text-align: center;'})
         }

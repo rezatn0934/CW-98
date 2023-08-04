@@ -29,14 +29,12 @@
                                         {% csrf_token %}
                                         <input type="hidden" name="create_tag" value="create_tag">
                                         <div class="row g-3 mt-2 flex-wrap">
-                                            <div class="col-md-4">
-                                                <div class="form-group text-dark">
-                                                    <label for="task_name"> </label>
-                                                    <input type="text" class="form-control" id="task_name"
-                                                           placeholder="Tag label:"
-                                                           name="tag_label">
+                                            {% for field in form %}
+                                                <div class="fieldWrapper">
+                                                    {{ field.errors }}
+                                                    {{ field.label_tag }} {{ field }}
                                                 </div>
-                                            </div>
+                                            {% endfor %}
                                             <div class="col-md-4">
                                                 <button class="btn btn-secondary btn-block">Create tag</button>
                                             </div>
