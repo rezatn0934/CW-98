@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import Task, Category, Tag
+from .forms import CreatTaskForm
 # Create your views here.
 
 
@@ -27,6 +28,7 @@ def all_seeing_eye_view(request):
     if request.method == 'GET':
         sort = request.GET.get('sort', 'title')
         order = request.GET.get('order', 'asc')
+        form = CreatTaskForm()
         if sort == 'title' or sort == 'status' or sort == 'due_date':
             sort_param = sort if order == 'asc' else '-' + sort
             tasks = Task.objects.order_by(sort_param)
@@ -59,20 +61,16 @@ def all_seeing_eye_view(request):
             'tags': list(tags),
             'stats': stats,
             'categories': categories,
+            'form': form
         }
         return render(request, 'task/tasks_list.html', context)
     elif request.method == 'POST':
-        task_title = request.POST.get('task_name')
-        task_description = request.POST.get('task_description')
-        status = request.POST.get('status')
-        category = get_object_or_404(Category, pk=request.POST.get('category'))
-        due_date = request.POST.get('due_date')
-        task = Task.objects.create(title=task_title, description=task_description, category=category, status=status, due_date=due_date)
-        tag_ids = map(int, request.POST.getlist('tags'))
-        tags = Tag.objects.filter(id__in=tag_ids)
-        for tag in tags:
-            task.tag.add(tag)
-        return redirect(request.path)
+        form = CreatTaskForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.user = request.user
+            task.save()
+            return redirect('task_detail', task_id=task.id)
 
 
 def tasks_tale_view(request, pk):
