@@ -25,6 +25,15 @@ class UserForm(forms.ModelForm):
                 attrs={'class': 'form-control', 'placeholder': 'Password', 'style': 'text-align: center;'}),
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        password2 = cleaned_data.get('password2')
+        if password and password2 and password != password2:
+            raise forms.ValidationError("Passwords do not match.")
+        del cleaned_data['password2']
+        return cleaned_data
+
 
 class LoginForm(forms.ModelForm):
     class Meta:
