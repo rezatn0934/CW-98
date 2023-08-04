@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import Task, Category, Tag
-from .forms import CreatTaskForm, UpdateCategoryForm
+from .forms import CreatTaskForm, UpdateCategoryForm, CreateTagForm
 # Create your views here.
 
 
@@ -75,6 +75,7 @@ def all_seeing_eye_view(request):
 
 def tasks_tale_view(request, pk):
     if request.method == 'GET':
+        form = CreateTagForm()
         task = get_object_or_404(Task, pk=pk)
         stats = []
         status_label = []
@@ -88,14 +89,14 @@ def tasks_tale_view(request, pk):
             'tags': list(tags),
             'stats': stats,
             'categories': categories,
+            'form': form
         }
         return render(request, 'task/task_detail.html', context)
     elif request.method == 'POST':
         print(request.POST)
         if 'create_tag' in request.POST:
-            tas_label = request.POST.get('tag_label')
-            Tag.objects.create(label=tas_label)
-            return redirect(request.path)
+            form = CreateTagForm(request.POST)
+            return redirect('task_detail', pk=pk)
         elif 'update_task' in request.POST:
             task = get_object_or_404(Task, pk=pk)
             task.title = request.POST.get('task_name')
@@ -171,4 +172,4 @@ def category_detail_view(request, pk):
         category.name = request.POST.get('category_name')
         category.description = request.POST.get('category_description')
         category.save()
-        return redirect('task/category_details.html', pk=category.id)
+        return redirect('category_detail', pk=category.id)
