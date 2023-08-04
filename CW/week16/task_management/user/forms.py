@@ -39,3 +39,9 @@ class LoginForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ('username', 'password')
+        widgets = {
+            'username': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': 'Username', 'style': 'text-align: center;'}),
+            'password': forms.PasswordInput(
+                attrs={'class': 'form-control', 'placeholder': 'Password', 'style': 'text-align: center;'}),
+        }
