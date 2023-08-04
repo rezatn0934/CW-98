@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import Task, Category, Tag
-from .forms import CreatTaskForm, UpdateCategoryForm, CreateTagForm
+from .forms import CreatTaskForm, UpdateCategoryForm, CreateTagForm, CreateCategoryForm
 # Create your views here.
 
 
@@ -145,14 +145,17 @@ def task_search_view(request):
 
 def categories_view(request):
     if request.method == 'GET':
+        form = CreateCategoryForm()
         categories = Category.objects.all()
-        context = {'categories': categories}
+        context = {'categories': categories, 'form': form}
         return render(request, 'task/category.html', context)
     elif request.method == 'POST':
-        categories_name = request.POST.get('category_name')
-        categories_description = request.POST.get('category_description')
-        Category.objects.create(name=categories_name, description=categories_description)
-        return redirect(request.path)
+        form = CreateCategoryForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            description = form.cleaned_data['description']
+            category = Category.objects.create(name=name, description=description)
+            return redirect('category_detail', category_id=category.id)
 
 
 def category_detail_view(request, pk):
