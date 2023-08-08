@@ -16,12 +16,13 @@ class TodoMixin:
     def get(self, request, pk):
         todo = Todo.objects.filter(id=pk)
         todo = todo.get(id=pk)
-        return render(request, self.template_name, {'todo': todo})
+        form = self.form_class(instance=todo)
+        return render(request, self.template_name, {'todo': todo, 'form': form})
 
     def post(self, request, pk):
         todo = Todo.objects.get(id=pk)
         form = self.form_class(request.POST, instance=todo)
         if form.is_valid():
             todo.save()
-            return redirect('thank_you')
+            return redirect('thank_you', todo.id)
         return render(request, self.template_name, {'todo': todo})
