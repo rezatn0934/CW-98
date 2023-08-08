@@ -22,3 +22,7 @@ class TodoDetailView(TodoMixin, View):
 class TankYou(View):
     def get(self, request, pk):
         return redirect(request, pk)
+
+
+def permision(request):
+    return render(request, 'Home/permision_denied.html')
