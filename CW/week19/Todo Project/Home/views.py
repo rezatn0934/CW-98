@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from .models import Todo
 from .mixins import TodoMixin
@@ -19,3 +19,6 @@ class TodoDetailView(TodoMixin, View):
     template_name = 'Home/todo_detail.html'
 
 
+class TankYou(View):
+    def get(self, request, pk):
+        return redirect(request, pk)
