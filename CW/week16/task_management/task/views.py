@@ -8,6 +8,12 @@ from .forms import CreatTaskForm, UpdateTaskForm, CreateCategoryForm, UpdateCate
 
 # Create your views here.
 
+class TodoOwnerRequiredMixin:
+    def dispatch(self, request, *args, **kwargs):
+        task = Task.objects.get(id=kwargs['pk'])
+        if not request.user.is_authenticated or not task.user == request.user:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
 
 
 def home_view(request):
