@@ -68,21 +68,22 @@
                                     </thead>
                                     <tbody>
                                     {% for task in tasks %}
-                                        <tr class="clickable-row" data-href="{% url 'task_detail' task.id %}">
-                                            <th scope="row">{{ forloop.counter }}</th>
-                                            <td><a class="text-decoration-none text-dark"
-                                                   href="{% url 'task_detail' task.id %}">{{ task.title }}</a></td>
-                                            <td><a class="text-decoration-none text-dark"
-                                                   href="{% url 'category_detail' task.category.id %}">{{ task.category }}</a>
-                                            </td>
-                                            <td>{{ task.get_status_display }}</td>
-                                            <td>{{ task.due_date }}</td>
-                                            <td></td>
-                                        </tr>
+                                        {% if request.user == task.user %}
+                                            <tr class="clickable-row" data-href="{% url 'task_detail' task.id %}">
+                                                <th scope="row">{{ forloop.counter }}</th>
+                                                <td><a class="text-decoration-none text-dark"
+                                                       href="{% url 'task_detail' task.id %}">{{ task.title }}</a></td>
+                                                <td><a class="text-decoration-none text-dark"
+                                                       href="{% url 'category_detail' task.category.id %}">{{ task.category }}</a>
+                                                </td>
+                                                <td>{{ task.get_status_display }}</td>
+                                                <td>{{ task.due_date }}</td>
+                                                <td></td>
+                                            </tr>
+                                        {% endif %}
                                     {% endfor %}
                                     </tbody>
                                 </table>
-
                                 <div class="d-flex justify-content-center">
                                     <!-- Display pagination links -->
                                     {% if tasks.has_other_pages %}
@@ -90,6 +91,7 @@
                                             {% if tasks.has_previous %}
                                                 <li class="page-item">
                                                     <a class="page-link" href="?page=
+
 
 
                                                             {{ tasks.previous_page_number }}{% if sort %}&sort={{ sort }}{% endif %}&order={% if order == 'asc' %} {{ 'desc' }} {% elif order == 'desc' %}{{ 'asc' }}{% endif %}">prev</a>
@@ -109,6 +111,7 @@
                                                         <a class="page-link" href="?page=
 
 
+
                                                                 {{ page }}{% if sort %}&sort={{ sort }}{% endif %}&order={% if order == 'asc' %} {{ 'desc' }} {% elif order == 'desc' %}{{ 'asc' }}{% endif %}">{{ page }}</a>
                                                     </li>
                                                 {% endif %}
@@ -116,6 +119,7 @@
                                             {% if tasks.has_next %}
                                                 <li class="page-item">
                                                     <a class="page-link" href="?page=
+
 
 
                                                             {{ tasks.next_page_number }}{% if sort %}&sort={{ sort }}{% endif %}&order={% if order == 'asc' %} {{ 'desc' }} {% elif order == 'desc' %}{{ 'asc' }}{% endif %}">next</a>

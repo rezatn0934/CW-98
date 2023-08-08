@@ -28,13 +28,15 @@
                                        alt="..."></div>
             <div class="col-lg-5 ">
                 {% if first_task %}
-                    <h1 class="font-weight-light"><a class="text-decoration-none text-dark"
-                                                     href='{% url 'task_detail' first_task.id %}'>{{ first_task.title }}</a>
-                    </h1>
-                    <p>{{ first_task.description | truncatewords:5 }}</p>
-                    <p class="card-small">Status: {{ first_task.get_status_display }}</p>
-                    <p class="card-small">Due date: {{ first_task.due_date }}</p>
-                    <a class="btn btn-secondary" href="{% url 'task_detail' first_task.id %}">More info!</a>
+                    {% if request.user == first_task.user %}
+                        <h1 class="font-weight-light"><a class="text-decoration-none text-dark"
+                                                         href='{% url 'task_detail' first_task.id %}'>{{ first_task.title }}</a>
+                        </h1>
+                        <p>{{ first_task.description | truncatewords:5 }}</p>
+                        <p class="card-small">Status: {{ first_task.get_status_display }}</p>
+                        <p class="card-small">Due date: {{ first_task.due_date }}</p>
+                        <a class="btn btn-secondary" href="{% url 'task_detail' first_task.id %}">More info!</a>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
@@ -46,21 +48,23 @@
         <div class="row gx-4 gx-lg-5 text-white">
             {% if tasks %}
                 {% for task in tasks %}
-                    <div class="col-lg-4 lg-sm-6 mb-5">
-                        <div class="card h-100 bg-gradient"
-                             style="background: linear-gradient(to right top, black, gray,slategrey, bisque)">
-                            <div class="card-body">
-                                <h2 class="card-title"><a class="text-decoration-none text-dark"
-                                                          href='{% url 'task_detail' task.id %}'>{{ task.title }}</a>
-                                </h2>
-                                <p class="card-text">{{ task.description | truncatewords:5 }}</p>
-                                <p class="card-small">Status: {{ task.get_status_display }}</p>
-                                <p class="card-small">Due date: {{ task.due_date }}</p>
+                    {% if request.user == task.user %}
+                        <div class="col-lg-4 lg-sm-6 mb-5">
+                            <div class="card h-100 bg-gradient"
+                                 style="background: linear-gradient(to right top, black, gray,slategrey, bisque)">
+                                <div class="card-body">
+                                    <h2 class="card-title"><a class="text-decoration-none text-dark"
+                                                              href='{% url 'task_detail' task.id %}'>{{ task.title }}</a>
+                                    </h2>
+                                    <p class="card-text">{{ task.description | truncatewords:5 }}</p>
+                                    <p class="card-small">Status: {{ task.get_status_display }}</p>
+                                    <p class="card-small">Due date: {{ task.due_date }}</p>
+                                </div>
+                                <div class="card-footer"><a class="btn btn-secondary btn-sm"
+                                                            href="{% url 'task_detail' task.id %}">More Info</a></div>
                             </div>
-                            <div class="card-footer"><a class="btn btn-secondary btn-sm"
-                                                        href="{% url 'task_detail' task.id %}">More Info</a></div>
                         </div>
-                    </div>
+                    {% endif %}
                 {% endfor %}
             {% endif %}
         </div>
