@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.views import View
 from .models import Task, Category, Tag
 from .forms import CreatTaskForm, UpdateTaskForm, CreateCategoryForm, UpdateCategoryForm, CreateTagForm
 
 
 # Create your views here.
+
 
 
 def home_view(request):
@@ -75,9 +77,10 @@ def all_seeing_eye_view(request):
             return redirect('task_detail', task_id=task.id)
 
 
-def tasks_tale_view(request, pk):
-    task = get_object_or_404(Task, pk=pk)
-    if request.method == 'GET':
+class TaskDetail(TodoOwnerRequiredMixin, View):
+
+    def get(self, request, pk):
+        task = get_object_or_404(Task, pk=pk)
         form1 = CreateTagForm()
         form2 = UpdateTaskForm(initial={
             'title': task.title,
@@ -102,8 +105,9 @@ def tasks_tale_view(request, pk):
             'form2': form2
         }
         return render(request, 'task/task_detail.html', context)
-    elif request.method == 'POST':
-        print(request.POST)
+
+    def post(self, request, task):
+        task = get_object_or_404(Task, pk=pk)
         if 'create_tag' in request.POST:
             form = CreateTagForm(request.POST)
             if form.is_valid():
@@ -181,3 +185,4 @@ def category_detail_view(request, pk):
         if form.is_valid():
             form.save()
         return redirect('category_detail', pk=category.id)
+
