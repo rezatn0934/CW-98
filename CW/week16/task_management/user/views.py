@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.hashers import make_password
-from .forms import LoginForm, UserForm
+from django.views import View
+
+from .forms import LoginForm, UserForm, ChangePassForm
+from .mixins import ProfileMixin
 from .models import CustomUser
 from .authentication import AuthBackend
 
@@ -34,6 +37,10 @@ def register_user(request):
     elif request.method == "GET":
         form = UserForm()
     return render(request, "user/login.html", {"message": message, "form": form})
+
+
+class ProfileView(ProfileMixin, View):
+    temp_name = 'user/profile.html'
 
 
 def log_out(request):
