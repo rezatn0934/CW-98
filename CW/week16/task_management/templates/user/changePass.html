@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <div class="content-wrapper">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 align-items-center my-5">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="col-lg-7">
+                        {{ form.as_p }}
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary me-2">Submit</button>
+                    </div>
+                </form>
+                <div class="card-footer d-flex justify-content-between">
+                    <button type="button" class="btn btn-primary me-2"><a hidden="{% url 'change_pass' %}">Change
+                        Password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
