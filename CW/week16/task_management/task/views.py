@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.views import View
 from .models import Task, Category, Tag
 from .forms import CreatTaskForm, UpdateTaskForm, CreateCategoryForm, UpdateCategoryForm, CreateTagForm
-
+from .mixins import TodoOwnerRequiredMixin
 
 # Create your views here.
 
