@@ -1,7 +1,6 @@
-from .models import CustomUser
 from django.shortcuts import render, redirect
 from .forms import UpdateUser
-
+import os
 
 class ProfileMixin:
     temp_name = None
