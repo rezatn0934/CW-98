@@ -43,6 +43,28 @@ class ProfileView(ProfileMixin, View):
     temp_name = 'user/profile.html'
 
 
+class ChangePassView(View):
+    temp_name = 'user/changePass.html'
+    form_model = ChangePassForm
+
+    def get(self, request):
+        form = self.form_model()
+        return render(request, self.temp_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_model(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            pass1 = cd['password1']
+            pass2 = cd['password2']
+            if pass1 and pass2 and pass1 == pass2:
+                user = request.user
+                user.password = pass1
+                user.save()
+
+        return redirect('profile')
+
+
 def log_out(request):
     logout(request)
     return redirect('login')
