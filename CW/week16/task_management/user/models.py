@@ -19,5 +19,10 @@ class CustomUser(ImageMixin, AbstractUser):
             self.change_image(old_instance, "image")
         super().save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        if self.image:
+            self.delete_image("image")
+        super().delete(*args, **kwargs)
+
     def __str__(self):
         return self.username
