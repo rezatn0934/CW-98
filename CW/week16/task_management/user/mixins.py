@@ -17,11 +17,22 @@ class ProfileMixin:
         return render(request, self.temp_name, {"form": form})
 
     def post(self, request):
-        form = self.form_model(request.POST, instance=request.user)
+        form = self.form_model(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
-            user = form.save(commit=False)
-            img = request.POST.get('image')
-            user.image = img
-            user.save()
+            form.save()
             return redirect('profile')
+
+
+class ImageMixin:
+    def change_image(self, old_instance, field):
+        target = getattr(old_instance, field)
+
+        if (not target == getattr(self, field) and
+                target and os.path.exists(target.path)):
+            os.remove(target.path)
+
+    def delete_image(self, field):
+        target = getattr(self, field)
+        if os.path.exists(target.path):
+            os.remove(target.path)
