@@ -71,3 +71,10 @@ class UpdateUser(forms.ModelForm):
                 attrs={'class': 'form-control', 'placeholder': 'Email', 'style': 'text-align: center;'}),
         }
         help_texts = {'username': None}
+
+
+class ChangePassForm(forms.Form):
+    password1 = forms.CharField(required=True, label='password1', widget=forms.PasswordInput(
+        attrs={'class': 'form-control', 'placeholder': 'Password', 'style': 'text-align: center;'}))
+    password2 = forms.CharField(required=True, label='password2', widget=forms.PasswordInput(
+        attrs={'class': 'form-control', 'placeholder': 'Password', 'style': 'text-align: center;'}))
