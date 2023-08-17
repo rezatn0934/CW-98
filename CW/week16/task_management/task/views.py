@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.views.generic import ListView, DetailView, UpdateView, FormView
+from django.views.generic import ListView, DetailView, UpdateView, FormView, CreateView
 from django.views import View
 from django.urls import reverse_lazy
 from .models import Task, Category, Tag
@@ -36,7 +36,6 @@ def all_seeing_eye_view(request):
     if request.method == 'GET':
         sort = request.GET.get('sort', 'title')
         order = request.GET.get('order', 'asc')
-        form = CreatTaskForm()
         if sort == 'title' or sort == 'status' or sort == 'due_date':
             sort_param = sort if order == 'asc' else '-' + sort
             tasks = Task.objects.order_by(sort_param)
@@ -69,16 +68,21 @@ def all_seeing_eye_view(request):
             'tags': list(tags),
             'stats': stats,
             'categories': categories,
-            'form': form
         }
         return render(request, 'task/tasks_list.html', context)
-    elif request.method == 'POST':
-        form = CreatTaskForm(request.POST)
-        if form.is_valid():
-            task = form.save(commit=False)
-            task.user = request.user
-            task.save()
-            return redirect('task_detail', task_id=task.id)
+
+
+class CreateTask(CreateView):
+    template_name = 'task/creat_task.html'
+    model = Task
+    fields = ['title', 'description', 'due_date', 'status', 'category', 'tag']
+    success_url = reverse_lazy('task_list')
+
+    def form_valid(self, form):
+        task = form.save(commit=False)
+        task.user = self.request.user
+        task.save()
+        return super().form_valid(form)
 
 
 class TaskDetail(TodoOwnerRequiredMixin, View):
