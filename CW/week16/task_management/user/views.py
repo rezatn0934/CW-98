@@ -65,8 +65,3 @@ class ChangePassView(View):
             else:
                 messages.error(request, "Your old password didn't match!")
         return redirect('profile')
-
-
-def log_out(request):
-    logout(request)
-    return redirect('login')
