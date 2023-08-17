@@ -1,30 +1,34 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.views.generic import ListView, DetailView, UpdateView, FormView
 from django.views import View
 from .models import Task, Category, Tag
 from .forms import CreatTaskForm, UpdateTaskForm, CreateCategoryForm, UpdateCategoryForm, CreateTagForm
 from .mixins import TodoOwnerRequiredMixin
 
+
 # Create your views here.
 
 
-def home_view(request):
-    if request.user.is_authenticated:
-        tasks = Task.objects.filter(user=request.user).order_by('due_date').distinct()
-    else:
-        tasks = Task.objects.all().order_by('due_date')
-    if tasks:
-        first_task = tasks[0]
-    else:
-        first_task = None
+class HomeView(ListView):
+    template_name = 'task/home.html'
+    model = Task
+    paginate_by = 5
+    context_object_name = 'tasks'
 
-    paginator = Paginator(tasks[1:], 6)
-    page_number = request.GET.get('page', 1)
-    tasks = paginator.get_page(page_number)
-    context = {'tasks': tasks, 'first_task': first_task}
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            context['tasks'] = self.model.objects.filter(user=self.request.user).order_by('due_date').distinct()
+        else:
+            context['tasks'] = None
 
-    return render(request, 'task/home.html', context)
+        if context['tasks']:
+            context['first_task'] = context['tasks'][0]
+        else:
+            context['first_task'] = None
+        return context
 
 
 def all_seeing_eye_view(request):
@@ -105,7 +109,7 @@ class TaskDetail(TodoOwnerRequiredMixin, View):
         }
         return render(request, 'task/task_detail.html', context)
 
-    def post(self, request, task):
+    def post(self, request, pk):
         task = get_object_or_404(Task, pk=pk)
         if 'create_tag' in request.POST:
             form = CreateTagForm(request.POST)
@@ -184,4 +188,3 @@ def category_detail_view(request, pk):
         if form.is_valid():
             form.save()
         return redirect('category_detail', pk=category.id)
-
