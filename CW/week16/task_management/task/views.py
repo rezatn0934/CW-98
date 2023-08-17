@@ -85,6 +85,13 @@ class CreateTask(CreateView):
         return super().form_valid(form)
 
 
+class UpdateTask(UpdateView):
+    template_name = 'task/creat_task.html'
+    model = Task
+    fields = ['title', 'description', 'due_date', 'status', 'category', 'tag']
+    success_url = reverse_lazy('task_list')
+
+
 class TaskDetail(TodoOwnerRequiredMixin, View):
 
     def get(self, request, pk):
