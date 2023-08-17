@@ -78,6 +78,7 @@ class CreateTask(CreateView):
     fields = ['title', 'description', 'due_date', 'status', 'category', 'tag']
     success_url = reverse_lazy('task_list')
 
+
     def form_valid(self, form):
         task = form.save(commit=False)
         task.user = self.request.user
@@ -92,52 +93,23 @@ class UpdateTask(UpdateView):
     success_url = reverse_lazy('task_list')
 
 
-class TaskDetail(TodoOwnerRequiredMixin, View):
+class TaskDetail(TodoOwnerRequiredMixin, DetailView):
+    model = Task
+    context_object_name = 'task'
+    template_name = 'task/task_detail.html'
+    form_class = CreateTagForm
 
-    def get(self, request, pk):
-        task = get_object_or_404(Task, pk=pk)
-        form1 = CreateTagForm()
-        form2 = UpdateTaskForm(initial={
-            'title': task.title,
-            'due_date': task.due_date,
-            'description': task.description,
-            'category': task.category,
-            'tag': task.tag.all(),
-        })
-        stats = []
-        status_label = []
-        for i in Task.STATUS_CHOICES:
-            status_label.append(i[0])
-            stats.append(i[0])
-        tags = Tag.objects.all()
-        categories = Category.objects.all()
-        context = {
-            'task': task,
-            'tags': list(tags),
-            'stats': stats,
-            'categories': categories,
-            'form1': form1,
-            'form2': form2
-        }
-        return render(request, 'task/task_detail.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.form_class
+        return context
 
     def post(self, request, pk):
-        task = get_object_or_404(Task, pk=pk)
         if 'create_tag' in request.POST:
             form = CreateTagForm(request.POST)
             if form.is_valid():
                 form.save()
             return redirect('task_detail', pk=pk)
-        elif 'update_task' in request.POST:
-            form = UpdateTaskForm(request.POST)
-            if form.is_valid():
-                task.title = form.cleaned_data['title']
-                task.due_date = form.cleaned_data['due_date']
-                task.description = form.cleaned_data['description']
-                task.category = form.cleaned_data['category']
-                task.tag.set(form.cleaned_data['tag'])
-                task.save()
-                return redirect('task_detail', pk=task.id)
 
 
 def task_search_view(request):
