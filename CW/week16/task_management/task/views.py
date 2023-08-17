@@ -3,6 +3,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.views.generic import ListView, DetailView, UpdateView, FormView
 from django.views import View
+from django.urls import reverse_lazy
 from .models import Task, Category, Tag
 from .forms import CreatTaskForm, UpdateTaskForm, CreateCategoryForm, UpdateCategoryForm, CreateTagForm
 from .mixins import TodoOwnerRequiredMixin
@@ -158,19 +159,22 @@ def task_search_view(request):
     return render(request, 'task/search.html', {'search_query': search_query, 'search_results': search_results})
 
 
-def categories_view(request):
-    if request.method == 'GET':
-        form = CreateCategoryForm()
-        categories = Category.objects.all()
-        context = {'categories': categories, 'form': form}
-        return render(request, 'task/category.html', context)
-    elif request.method == 'POST':
-        form = CreateCategoryForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            description = form.cleaned_data['description']
-            category = Category.objects.create(name=name, description=description)
-            return redirect('category_detail', category_id=category.id)
+class CategoryView(FormView):
+    model = Category
+    template_name = 'task/category.html'
+    form_class = CreateCategoryForm
+    context_object_name = 'categories'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
+
+    def form_valid(self, form):
+        name = form.cleaned_data['name']
+        description = form.cleaned_data['description']
+        category = self.model.objects.create(name=name, description=description)
+        return redirect('category_detail', pk=category.id)
 
 
 def category_detail_view(request, pk):
