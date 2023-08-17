@@ -21,17 +21,3 @@ class ProfileMixin:
         if form.is_valid():
             form.save()
             return redirect('profile')
-
-
-class ImageMixin:
-    def change_image(self, old_instance, field):
-        target = getattr(old_instance, field)
-
-        if (not target == getattr(self, field) and
-                target and os.path.exists(target.path)):
-            os.remove(target.path)
-
-    def delete_image(self, field):
-        target = getattr(self, field)
-        if os.path.exists(target.path):
-            os.remove(target.path)
