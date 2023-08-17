@@ -29,7 +29,7 @@
                                         {% csrf_token %}
                                         <input type="hidden" name="create_tag" value="create_tag">
                                         <div class="row g-3 mt-2 flex-wrap">
-                                            {% for field in form1 %}
+                                            {% for field in form %}
                                                 <div class="fieldWrapper">
                                                     {{ field.errors }}
                                                     {{ field.label_tag }} {{ field }}
@@ -60,7 +60,7 @@
                             <p class="card-text text-light">{{ task.description }}</p>
                             <p class="card-tag">Category:<a class="text-decoration-none"
                                                             href="{% url 'category_detail' task.category.id %}"
-                                                            style="color: #6c5555;">{{ task.category }}</a> | Tags:
+                                                            style="color: #6c5555;">{{ task.category }}</a> | Tags:stats
                                 {% for tag in task.tag.all %}
                                     # {{ tag.label }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
