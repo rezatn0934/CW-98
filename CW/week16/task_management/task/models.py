@@ -39,6 +39,7 @@ class Task(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True, editable=False)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title
