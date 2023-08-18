@@ -37,6 +37,8 @@ class Task(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     tag = models.ManyToManyField(Tag)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    updated = models.DateTimeField(auto_now=True, editable=False)
 
     def __str__(self):
         return self.title
