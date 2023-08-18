@@ -9,7 +9,8 @@ import csv
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     actions = ['export_to_csv']
-    list_display = ('title', 'due_date', 'user', 'status', 'category', 'created', 'updated', 'description')
+    readonly_fields = ('is_active',)
+    list_display = ('title', 'due_date', 'user', 'status', 'category', 'is_active', 'created', 'updated', 'description')
     list_editable = ('status',)
     list_filter = ('status', 'category')
     search_fields = ('title', 'category__name')
