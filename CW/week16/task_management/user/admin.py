@@ -15,6 +15,7 @@ class CustomUserAdmin(admin.ModelAdmin):
                     'is_active', 'is_superuser', 'img_preview'];
     ordering = ['first_name', 'last_name', 'email', 'is_staff', 'is_active', 'is_superuser', ]
 
+    @admin.display(ordering='task_count')
     def task_count(self, user):
         url = (reverse('admin:task_task_changelist')
                + '?'
