@@ -1,14 +1,16 @@
 from django.contrib import admin
 from django.contrib import messages
+from django.http.response import JsonResponse
 from .models import Task, Category, Tag
 # Register your models here.
 
 import csv
+import json
 
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    actions = ['export_to_csv']
+    actions = ['export_to_csv', 'export_to_json']
     readonly_fields = ('is_active',)
     list_display = ('title', 'due_date', 'user', 'status', 'category', 'is_active', 'created', 'updated', 'description')
     list_editable = ('status',)
@@ -28,6 +30,15 @@ class TaskAdmin(admin.ModelAdmin):
                      item.updated, item.is_active])
 
         messages.success(request, 'CSV file for selected model has been successfully created at task/task.csv')
+
+    @admin.action(description='Export To Json')
+    def export_as_json(self, request, queryset):
+        meta = self.model._meta
+
+        data = list(queryset.values())
+        response = JsonResponse(data, safe=False)
+        response['Content-Disposition'] = 'attachment; filename={}.json'.format(meta)
+        return response
 
 
 @admin.register(Category)
