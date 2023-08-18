@@ -7,6 +7,23 @@ from django import forms
 from .models import CustomUser
 
 
+class IsGreatUserFilter(admin.SimpleListFilter):
+    title = 'is_great_user'
+    parameter_name = 'is_great_user'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('Yes', 'Yes'),
+            ('No', 'No'),
+        )
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == 'Yes':
+            return queryset.filter(task_count__gt=10)
+        elif value == 'No':
+            return queryset.exclude(task_count__gt=10)
+        return queryset
 # Register your models here.
 
 @admin.register(CustomUser)
@@ -14,6 +31,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     list_display = ['username', 'is_great_user', 'task_count', 'first_name', 'last_name', 'email', 'is_staff',
                     'is_active', 'is_superuser', 'img_preview'];
     ordering = ['first_name', 'last_name', 'email', 'is_staff', 'is_active', 'is_superuser', ]
+    fields = [IsGreatUserFilter]
 
     @admin.display(ordering='task_count')
     def task_count(self, user):
