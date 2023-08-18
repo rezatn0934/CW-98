@@ -15,6 +15,17 @@ class CustomUserAdmin(admin.ModelAdmin):
                     'is_active', 'is_superuser', 'img_preview'];
     ordering = ['first_name', 'last_name', 'email', 'is_staff', 'is_active', 'is_superuser', ]
 
+    def task_count(self, user):
+        url = (reverse('admin:task_task_changelist')
+               + '?'
+               + urlencode({
+                    'user__id': str(user.id)
+                }))
+
+        return format_html('<a href="{}">{}</a>', url, user.task_count)
+
+    task_count.short_description = 'Number Of Tasks'
+
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(
             task_count=Count('task__user')
