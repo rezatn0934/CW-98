@@ -31,3 +31,9 @@ class CustomUserAdmin(admin.ModelAdmin):
         return super().get_queryset(request).annotate(
             task_count=Count('task__user')
         )
+
+    def is_great_user(self, obj):
+        if obj.task_count > 10:
+            return True
+        else:
+            return False
