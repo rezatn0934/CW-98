@@ -20,3 +20,8 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
 
     REQUIRED_FIELDS = []
     objects = UserManager()
+
+    class Meta:
+        abstract = True
+
+
