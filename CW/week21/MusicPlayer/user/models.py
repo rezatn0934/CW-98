@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.utils.translation import gettext_lazy as _
 from django.db import models
 
 from .manger import UserManager
@@ -8,7 +9,7 @@ from songs.models import Song
 class AbstractUser(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(unique=True)
-    name = models.CharField(verbose_name=_("First Name"), max_length=50, null=True, blank=True)
+    name = models.CharField(verbose_name=_("Name"), max_length=50, null=True, blank=True)
     image = models.ImageField(upload_to='images/user', null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -20,9 +21,6 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
 
     REQUIRED_FIELDS = []
     objects = UserManager()
-
-    class Meta:
-        abstract = True
 
 
 class Band(models.Model):
