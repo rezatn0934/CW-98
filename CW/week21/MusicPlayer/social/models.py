@@ -21,3 +21,13 @@ class Like(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.song}"
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    song = models.ForeignKey(Song, on_delete=models.CASCADE)
+    content = models.TextField()
+    approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user} - {self.song}"
