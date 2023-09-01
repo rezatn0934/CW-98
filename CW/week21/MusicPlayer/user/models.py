@@ -25,3 +25,7 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
         abstract = True
 
 
+class Artist(AbstractUser):
+    bio = models.TextField()
+    songs = models.ManyToManyField(Song)
+
