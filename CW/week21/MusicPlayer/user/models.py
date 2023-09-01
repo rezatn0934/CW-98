@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 
-from manger import UserManager
+from .manger import UserManager
 from songs.models import Song
 
 
@@ -25,11 +25,17 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
         abstract = True
 
 
+class Band(models.Model):
+    name = models.CharField(max_length=50)
+    start_at = models.DateTimeField(auto_now_add=True, editable=True)
+    end_at = models.DateTimeField(auto_now_add=True, editable=True)
+
+
 class Artist(AbstractUser):
     bio = models.TextField()
     songs = models.ManyToManyField(Song)
+    band = models.ForeignKey(Band, on_delete=models.PROTECT)
 
 
 class Listener(AbstractUser):
     is_vip = models.BooleanField(default=True)
-
