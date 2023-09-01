@@ -1,14 +1,14 @@
 from django.db import models
 from django.db import models
-from user.models import User
+from user.models import Listener
 from songs.models import Song
 # Create your models here.
 
 
 class Playlist(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=50)
     description = models.TextField(null=True, blank=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Listener, on_delete=models.CASCADE)
     songs = models.ManyToManyField(Song)
 
     def __str__(self):
@@ -16,7 +16,7 @@ class Playlist(models.Model):
 
 
 class Like(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Listener, on_delete=models.CASCADE)
     song = models.ForeignKey(Song, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -24,7 +24,7 @@ class Like(models.Model):
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Listener, on_delete=models.CASCADE)
     song = models.ForeignKey(Song, on_delete=models.CASCADE)
     content = models.TextField()
     approved = models.BooleanField(default=False)
