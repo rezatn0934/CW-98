@@ -29,3 +29,7 @@ class Artist(AbstractUser):
     bio = models.TextField()
     songs = models.ManyToManyField(Song)
 
+
+class Listener(AbstractUser):
+    is_vip = models.BooleanField(default=True)
+
