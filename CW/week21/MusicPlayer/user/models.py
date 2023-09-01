@@ -3,7 +3,6 @@ from django.utils.translation import gettext_lazy as _
 from django.db import models
 
 from .manger import UserManager
-from songs.models import Song
 
 
 class AbstractUser(AbstractBaseUser, PermissionsMixin):
@@ -31,7 +30,7 @@ class Band(models.Model):
 
 class Artist(AbstractUser):
     bio = models.TextField()
-    songs = models.ManyToManyField(Song)
+    songs = models.ManyToManyField('songs.Song')
     band = models.ForeignKey(Band, on_delete=models.PROTECT)
 
 
