@@ -130,3 +130,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'user.AbstractUser'
 
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'user.authentication.AuthBackend'
+]
