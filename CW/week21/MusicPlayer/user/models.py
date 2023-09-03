@@ -22,6 +22,9 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username']
     objects = UserManager()
 
+    def __str__(self):
+        return self.username
+
 
 class Band(models.Model):
     name = models.CharField(max_length=50)
