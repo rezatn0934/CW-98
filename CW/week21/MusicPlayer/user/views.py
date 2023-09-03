@@ -24,3 +24,14 @@ class UserLoginView(LoginView):
             self.request.session.set_expiry(0)
             self.request.session.modified = True
         return super().form_valid(form)
+
+
+class UserRegisterView(View):
+    redirect_authenticated_user = True
+    template_name = 'user/register.html'
+
+    def get(self, request):
+        artist_form = ArtistRegisterForm()
+        listener_form = ListenerRegisterForm()
+        return render(request, self.template_name, {'artist_form': artist_form, 'listener_form': listener_form})
+
