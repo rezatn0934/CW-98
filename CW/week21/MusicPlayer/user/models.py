@@ -45,6 +45,8 @@ class Artist(AbstractUser):
         if self.image:
             return mark_safe(f'<img src = "{self.image.url}" width = "150" height="150"/>')
 
+    def __str__(self):
+        return f"artist - {self.username}"
 
 
 class Listener(AbstractUser):
