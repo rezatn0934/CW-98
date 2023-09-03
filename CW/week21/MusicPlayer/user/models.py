@@ -36,9 +36,15 @@ class Band(models.Model):
 
 
 class Artist(AbstractUser):
-    bio = models.TextField()
+    bio = models.TextField(null=True, blank=True)
     songs = models.ManyToManyField('songs.Song')
-    band = models.ForeignKey(Band, on_delete=models.PROTECT)
+    band = models.ForeignKey(Band, on_delete=models.PROTECT, null=True, blank=True)
+    image = models.ImageField(upload_to='images/artist', null=True, blank=True)
+
+    def img_preview(self):
+        if self.image:
+            return mark_safe(f'<img src = "{self.image.url}" width = "150" height="150"/>')
+
 
 
 class Listener(AbstractUser):
