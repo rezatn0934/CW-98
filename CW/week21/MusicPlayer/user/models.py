@@ -50,4 +50,17 @@ class Artist(AbstractUser):
 
 
 class Listener(AbstractUser):
-    is_vip = models.BooleanField(default=True)
+    image = models.ImageField(upload_to='images/listener', null=True, blank=True)
+    USER_STATUS_VIP = 'V'
+    USER_STATUS_FREE = 'F'
+    USER_STATUS_CHOICES = [
+        (USER_STATUS_VIP, 'VIP'),
+        (USER_STATUS_FREE, 'FREE'),
+    ]
+    user_status = models.CharField(max_length=1, choices=USER_STATUS_CHOICES, default=USER_STATUS_FREE)
+    vip_until = models.DateTimeField(null=True, blank=True)
+
+    def img_preview(self):
+        if self.image:
+            return mark_safe(f'<img src = "{self.image.url}" width = "150" height="150"/>')
+
