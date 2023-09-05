@@ -35,6 +35,8 @@ class Song(models.Model):
     def likes(self):
         return len(self.like_set.all())
 
+    def comments(self):
+        return list(self.comment_set.filter(approved=True))
 
     def __str__(self):
         return self.title
