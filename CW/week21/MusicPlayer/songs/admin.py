@@ -13,8 +13,8 @@ class UserInline(admin.TabularInline):
 class SongAdmin(admin.ModelAdmin):
     list_display = ('title', 'display_artists', 'sound_display', 'band_name', 'upload_date', 'cover_preview')
     inlines = [UserInline, ]
-    list_filter = ('title__istartwith', 'upload_date__istartwith')
-
+    list_filter = ('title', 'upload_date')
+    search_fields = ('title__istartwith', 'upload_date__istartwith')
     list_select_related = ('band', 'artist')
 
     def band_name(self, obj):
@@ -34,3 +34,10 @@ class SongAdmin(admin.ModelAdmin):
         return ', '.join(artist_names)
 
     display_artists.short_description = 'Artists'
+
+
+@admin.register(Genre)
+class GenreAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    list_filter = ('name', )
+    search_fields = ('name', )
