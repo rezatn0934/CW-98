@@ -37,7 +37,7 @@ class CreatCommentView(CreateView):
         comment.song = Song.objects.get(id=int(song_id))
         comment.save()
 
-        return JsonResponse({'like_count': 'like_count'}, status=200)
+        return JsonResponse({'message': 'successfully created'}, status=200)
 
     def form_invalid(self, form):
         data = {'error': form.errors}
