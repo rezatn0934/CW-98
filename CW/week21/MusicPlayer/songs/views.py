@@ -1,9 +1,9 @@
-
+from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.shortcuts import redirect, reverse, render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
-
+from django.conf import settings
 from .mixins import LikeMixin
 from .models import Song
 from user.models import Artist
@@ -60,13 +60,3 @@ class SongDetailView(LikeMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['form'] = self.form_class
         return context
-
-    def post(self, request, pk):
-        if 'create_tag' in request.POST:
-            form = self.form_class(request.POST)
-            if form.is_valid():
-                comment = form.save(commit=False)
-                comment.user = request.user
-                comment.song = self.model.objects.get(id=pk)
-                comment.save()
-            return redirect(reverse('song:song_detail', args=(pk,)))
