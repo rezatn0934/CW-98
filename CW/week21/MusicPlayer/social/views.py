@@ -25,3 +25,8 @@ class LikeView(View):
         like_count = Song.objects.get(id=song_id).likes()
         return JsonResponse({'like_count': like_count}, status=200)
 
+
+class CreatCommentView(CreateView):
+    model = Comment
+    form_class = CommentCreation
+
