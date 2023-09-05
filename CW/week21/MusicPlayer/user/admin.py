@@ -14,6 +14,7 @@ class AbstractUserAdmin(UserAdmin):
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
 
+
     fieldsets = [
         [None, {'fields': ['username', 'email', 'password1', 'password2']}],
         ['Personal Info', {'fields': ['name', ]}],
@@ -24,7 +25,38 @@ class AbstractUserAdmin(UserAdmin):
         ['Personal Info', {'fields': ['name', ]}],
         ['Permissions', {'fields': ['is_active', 'is_staff', 'is_superuser']}],
     ]
+
     list_display = ['username', 'email', 'name', 'last_login', 'date_joined', 'is_active', 'is_staff', 'is_superuser']
-    search_fields = ['username', 'email', 'name']
-    ordering = ['username', ]
+    search_fields = ['username__istartwith', 'email__istartswith', 'name__istartswith']
+    ordering = ['date_joined', ]
+
+
+@admin.register(Artist)
+class ArtistUserAdmin(AbstractUserAdmin):
+    form = ArtistRegisterForm
+    model = Artist
+
+    list_display = ['name', 'songs_list', 'bio', 'band_name', 'username', 'email', 'is_active', 'is_staff',
+                    'is_superuser', 'last_login', 'date_joined', 'img_preview']
+    list_select_related = ['band', ]
+    fieldsets = (
+        *AbstractUserAdmin.fieldsets,
+        ('Artist Info', {'fields': ('bio', 'band', 'songs')}),
+    )
+    add_fieldsets = (
+        *AbstractUserAdmin.add_fieldsets,
+        ('Artist Info', {
+            'fields': ('bio', 'band', 'songs'),
+        }),
+    )
+    search_fields = ['username__istartwith', 'email__istartswith', 'name__istartswith']
+    ordering = ['date_joined', ]
+
+    def songs_list(self, obj):
+        return ",".join([song.title for song in obj.songs.all()])
+
+    def band_name(self, obj):
+        if obj.band:
+            return obj.band.name
+
 
