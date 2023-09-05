@@ -85,7 +85,7 @@ class ListenerUserAdmin(AbstractUserAdmin):
 
 
 @admin.register(Band)
-class Band_admin(admin.ModelAdmin):
+class BandAdmin(admin.ModelAdmin):
     list_display = ('name', 'start_at', 'end_at', 'display_artists')
 
     list_select_related = ('artist', )
