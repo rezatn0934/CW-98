@@ -4,8 +4,8 @@ from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import CreateView
 
-from .forms import CommentCreation
-from .models import Like, Comment
+from .forms import CommentCreation, PlaylistCreation
+from .models import Like, Comment, Playlist
 from songs.models import Song
 
 
@@ -42,3 +42,9 @@ class CreatCommentView(CreateView):
     def form_invalid(self, form):
         data = {'error': form.errors}
         return JsonResponse(data, status=400)
+
+
+class CreatPlayListView(CreateView):
+    model = Playlist
+    form_class = PlaylistCreation
+
