@@ -53,3 +53,8 @@ class SongDetailView(LikeMixin, DetailView):
     form_class = CommentCreation
     login_url = reverse_lazy('user:login')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.form_class
+        return context
+
