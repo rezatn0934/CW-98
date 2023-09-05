@@ -5,11 +5,11 @@
                 <p class="pt-1">Nothing Was Found</p>
             </div>
         {% else %}
-
             <!-- Single Album -->
-            <div class="col-12 col-sm-4 col-md-3 col-lg-3 single-album-item">
+            <div class="col-12 col-sm-4 col-md-3 col-lg-3 single-album-item mb-4">
                 <div class="single-album">
-                    <img src="{{ song.cover_photo.url }}" alt="">
+                    <img style="height: 150px !important; width: 150px !important;" src="{{ song.cover_photo.url }}"
+                         alt="">
                     <div class="album-info">
                         <a href='{% url 'song:song_detail' song.id %}'>
                             <h5>{{ song.title }}</h5>
@@ -25,7 +25,7 @@
                             {% endfor %}
                         </small>
                         {% if request.user.is_authenticated %}
-                            <div class="p-2 m-2  text-left">
+                            <div class="p-2 m-2 text-left">
                                 <form action="{% url 'social:like' %}" id="like_form" method="post">
                                     {% csrf_token %}
                                     <input type="hidden" name="like" value="{{ song.id }}">
@@ -37,7 +37,8 @@
                                             <i class="bi bi-heart-fill {% if song.liked %} like_red {% endif %}"></i>
                                         </button>
                                         <small id="like_count">{{ song.likes }}</small>
-                                        <a data-toggle="collapse" href="#collapseExample" role="button"
+                                        <a data-toggle="collapse" href="#collapseExample{{ song.id }}select"
+                                           role="button"
                                            aria-expanded="false"
                                            aria-controls="collapseExample"
                                            class="advanced text-decoration-none text-dark ml-2">
@@ -47,23 +48,31 @@
                                 </form>
                             </div>
                         {% endif %}
-                        <div class="mt-2">
-                            <audio preload="auto" style="width: 100%" controls>
-                                <source src="{{ song.audio_file.url }}" type="audio/mpeg">
-                            </audio>
-                        </div>
-                    </div>
-                    <div class="collapse blog-content" id="collapseExample">
-                        <div class="alert" role="alert"><p id="msg1"></p></div>
-                        <form method="post" action="{% url 'social:create_comment' %}" id="creat_comment"
-                              class="align-items-center justify-content-center">
-                            {% csrf_token %}
-                            <p></p>
-                            <input type="hidden" name="song_id" value="{{ song.id }}">
-                            <button type="submit" class="btn oneMusic-btn mt-30">Add</button>
+                        <audio preload="auto" style="width: 100%" controls>
+                            <source src="{{ song.audio_file.url }}" type="audio/mpeg">
+                        </audio>
+                        <div class="collapse ratio" style="--bs-aspect-ratio: 30%;"
+                             id="collapseExample{{ song.id }}select">
                             <div class="alert" role="alert"><p id="msg1"></p></div>
-
-                        </form>
+                            <form method="post" action="{% url 'social:update_playlist' %}" id="selectPlaylist"
+                                  class="align-items-center justify-content-center p-1">
+                                {% csrf_token %}
+                                <input type="hidden" name="song_id" value="{{ song.id }}">
+                                <input type="hidden" name="playlist_input" value="">
+                                <select name="playlist" id="dselect-example" class="form-control"
+                                        data-live-search="true">
+                                    <option value="" disabled selected>-- Choose a Playlist --</option>
+                                    {% for playlist in playlists %}
+                                        {% if song not in playlist.song_list %}
+                                            <option name="playlist_option"
+                                                    value="{{ playlist.id }}">{{ playlist.title }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn oneMusic-btn mt-1"><i class="bi bi-check2-circle">Select</i>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
