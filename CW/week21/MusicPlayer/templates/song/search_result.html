@@ -1,0 +1,72 @@
+<div class="row oneMusic-albums">
+    {% for song in songs %}
+        {% if songs.0 == "Nothing Was Found" %}
+            <div class="col-sm-3">
+                <p class="pt-1">Nothing Was Found</p>
+            </div>
+        {% else %}
+
+            <!-- Single Album -->
+            <div class="col-12 col-sm-4 col-md-3 col-lg-3 single-album-item">
+                <div class="single-album">
+                    <img src="{{ song.cover_photo.url }}" alt="">
+                    <div class="album-info">
+                        <a href='{% url 'song:song_detail' song.id %}'>
+                            <h5>{{ song.title }}</h5>
+                        </a>
+                        <p>
+                            {% for artist in song.artists %}
+                                {{ artist.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </p>
+                        <small>
+                            {% for genre in song.genre_list %}
+                                {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </small>
+                        {% if request.user.is_authenticated %}
+                            <div class="p-2 m-2  text-left">
+                                <form action="{% url 'social:like' %}" id="like_form" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="like" value="{{ song.id }}">
+                                    <input type="hidden" name="like_input" {% if song.liked %}
+                                           value="unlike" {% else %} value="like" {% endif %}>
+                                    <div class="mt-2">
+                                        <button type="submit" name="like_button" class="border-0"
+                                                style="font-size: large !important;">
+                                            <i class="bi bi-heart-fill {% if song.liked %} like_red {% endif %}"></i>
+                                        </button>
+                                        <small id="like_count">{{ song.likes }}</small>
+                                        <a data-toggle="collapse" href="#collapseExample" role="button"
+                                           aria-expanded="false"
+                                           aria-controls="collapseExample"
+                                           class="advanced text-decoration-none text-dark ml-2">
+                                            <i class="bi bi-bookmark-plus"></i>
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                        {% endif %}
+                        <div class="mt-2">
+                            <audio preload="auto" style="width: 100%" controls>
+                                <source src="{{ song.audio_file.url }}" type="audio/mpeg">
+                            </audio>
+                        </div>
+                    </div>
+                    <div class="collapse blog-content" id="collapseExample">
+                        <div class="alert" role="alert"><p id="msg1"></p></div>
+                        <form method="post" action="{% url 'social:create_comment' %}" id="creat_comment"
+                              class="align-items-center justify-content-center">
+                            {% csrf_token %}
+                            <p></p>
+                            <input type="hidden" name="song_id" value="{{ song.id }}">
+                            <button type="submit" class="btn oneMusic-btn mt-30">Add</button>
+                            <div class="alert" role="alert"><p id="msg1"></p></div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
