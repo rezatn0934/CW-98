@@ -20,7 +20,8 @@
                         <h3>Welcome Back</h3>
                         <!-- Login Form -->
                         <div class="login-form">
-                            <form action='{% url 'song:home' %}' method="post">
+                            <form action='{% url 'user:login' %}' method="post">
+                                {% csrf_token %}
                                 <div class="form-group">
                                     {{ form.as_p }}
                                 </div>
