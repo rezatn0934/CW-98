@@ -46,3 +46,15 @@ class CustomUserCreationForm(UserCreationForm):
         }
 
 
+class ArtistRegisterForm(CustomUserCreationForm):
+    bio = forms.CharField(required=False, label="Bio",
+                          widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter your bio'}))
+    band = forms.ModelChoiceField(queryset=Band.objects.all(),
+                                  widget=forms.Select(attrs={'class': 'form-control'}), label="Band",
+                                  required=False)
+
+    class Meta(CustomUserCreationForm.Meta):
+        model = Artist
+        fields = ('username', 'email', 'name', 'bio', 'band', 'image', 'password1', 'password2')
+
+
