@@ -1,8 +1,8 @@
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
-from django.shortcuts import redirect
-from django.urls import reverse_lazy, reverse
+from django.conf import settings
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.views.generic import CreateView
 from django.views import View
-from django.views.generic import CreateView, UpdateView
 
 from .forms import CommentCreation, PlaylistCreation
 from .models import Like, Comment, Playlist
@@ -54,6 +54,13 @@ class CreatPlayListView(CreateView):
         song_id = self.request.POST.get('song_id')
         comment.song = Song.objects.get(id=int(song_id))
         comment.save()
+
+        subject = 'Comment'
+        message = ('Your Comment has been successfully created. '
+                   'after admin confirmation will be displayed on website')
+        recipient_list = self.request.user.email
+        from_email = settings.EMAIL_HOST_USER
+        send_mail(subject, message, from_email, recipient_list)
 
         return JsonResponse({'message': 'successfully created'}, status=200)
 
