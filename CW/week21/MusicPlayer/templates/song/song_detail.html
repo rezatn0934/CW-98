@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <!-- ##### Breadcumb Area Start ##### -->
+    <section class="breadcumb-area bg-img bg-overlay" style="background-image: url(img/bg-img/breadcumb3.jpg);">
+        <div class="bradcumbContent">
+            <p>See what’s new</p>
+            <h2>News</h2>
+            {% if messages %}
+                {% for message in messages %}
+                    <div id="msg" class="alert {{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+            {% endif %}
+            <br>
+        </div>
+    </section>
+    <!-- ##### Breadcumb Area End ##### -->
+
+    <!-- ##### Blog Area Start ##### -->
+    <div class="blog-area section-padding-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-9">
+
+                    <!-- Single Post Start -->
+                    <div class="single-blog-post mb-100 wow fadeInUp" data-wow-delay="100ms">
+                        <!-- Post Thumb -->
+                        <div class="blog-post-thumb mt-30">
+                            <img style="width: 100% !important;height: fit-content !important;"
+                                 src='{{ song.cover_photo.url }}' alt="">
+                            <!-- Post Date -->
+                            <div class="post-date">
+                                <span>{{ song.upload_date.day }}</span>
+                                <span>{{ song.upload_date|date:"Y F" }}</span>
+                            </div>
+                        </div>
+                        <!-- Blog Content -->
+                        <div class="blog-content">
+                            <!-- Post Title -->
+                            <p class="post-title">{{ song.title }}</p>
+                            <!-- Post Meta -->
+                            <div class="post-meta d-flex mb-30">
+                                <p class="post-author">
+                                    By
+                                    {% for artist in song.artists %}
+                                        <a href="#">
+                                            {{ artist.name }}{% if not forloop.last %}, {% endif %}
+                                        </a>
+                                    {% endfor %}
+                                </p>
+                                <p class="tags">genres:{% for genre in song.genre_list %}
+                                    {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}</p>
+                                <p id="comment_count" class="tags">{{ song.comments|length }} Comments
+                                    {% if request.user.is_authenticated %}
+                                        <a data-toggle="collapse" href="#collapseExample" role="button"
+                                           aria-expanded="false"
+                                           aria-controls="collapseExample"
+                                           class="advanced text-decoration-none text-dark"><i class="bi bi-chat"></i>
+                                        </a>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <!-- Post Excerpt -->
+                            <div class="song-play-area">
+                                <audio preload="auto" controls>
+                                    <source src="{{ song.audio_file.url }}">
+                                </audio>
+                            </div>
+                            {% if request.user.is_authenticated %}
+                                <div class="p-2 m-2 text-left">
+                                    <form action="{% url 'social:like' %}" id="like_form" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="like" value="{{ song.id }}">
+                                        <input type="hidden" name="like_input" {% if song.liked %}
+                                               value="unlike" {% else %} value="like" {% endif %}>
+                                        <button type="submit" name="like_button" class="border-0"
+                                                style="font-size: large !important;">
+                                            <i class="bi bi-heart-fill {% if song.liked %} like_red {% endif %}"></i>
+                                        </button>
+                                        <small id="like_count">{{ song.likes }}</small>
+                                    </form>
+                                </div>
+                                </div>
+                                <div class="collapse blog-content" id="collapseExample">
+                                    <div class="alert" role="alert"><p id="msg1"></p></div>
+                                    <form method="post" action="{% url 'social:create_comment' %}" id="creat_comment"
+                                          class="align-items-center justify-content-center">
+                                        {% csrf_token %}
+                                        <p>{{ form }}</p>
+                                        <input type="hidden" name="song_id" value="{{ song.id }}">
+                                        <button type="submit" class="btn oneMusic-btn mt-30">Add</button>
+                                        <div class="alert" role="alert"><p id="msg1"></p></div>
+
+                                    </form>
+                                </div>
+                            {% endif %}
+                        {% for comment in song.comments %}
+                            {% if comment.approved %}
+                                <div class="blog-content">
+                                    <div class="post-meta d-flex mb-30">
+                                        <p class="post-author">By {{ comment.user }}</p>
+                                        <p class="tags">on {{ comment.date }}</p>
+                                    </div>
+                                    <!-- Post Excerpt -->
+                                    <p>{{ comment.content }}</p>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
