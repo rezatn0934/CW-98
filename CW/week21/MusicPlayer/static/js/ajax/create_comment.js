@@ -1,6 +1,5 @@
 $('body').on('submit', '#creat_comment', function (event) {
     event.preventDefault();
-    event.preventDefault();
     let self = $(this)
     $.ajax({
         type: 'Post',
@@ -15,7 +14,6 @@ $('body').on('submit', '#creat_comment', function (event) {
             console.log('', response)
         }
     })
-    console.log('test 2')
     setTimeout(function () {
         $('body').off('submit', '#creat_comment');
         self.find('#msg1').text('')
