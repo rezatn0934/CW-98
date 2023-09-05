@@ -45,3 +45,11 @@ class Home(LikeMixin, ListView):
 
         return render(request, self.template_name, context=context)
 
+
+class SongDetailView(LikeMixin, DetailView):
+    model = Song
+    template_name = 'song/blog.html'
+    context_object_name = 'song'
+    form_class = CommentCreation
+    login_url = reverse_lazy('user:login')
+
