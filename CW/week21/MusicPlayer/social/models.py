@@ -13,6 +13,9 @@ class Playlist(models.Model):
     def __str__(self):
         return self.title
 
+    def song_list(self):
+        return list(self.songs.all())
+
 
 class Like(models.Model):
     user = models.ForeignKey(AbstractUser, on_delete=models.CASCADE)
