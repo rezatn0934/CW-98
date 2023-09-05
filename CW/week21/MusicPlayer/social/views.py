@@ -57,3 +57,6 @@ class CreatPlayListView(CreateView):
 
         return JsonResponse({'message': 'successfully created'}, status=200)
 
+    def form_invalid(self, form):
+        data = {'error': form.errors}
+        return JsonResponse(data, status=400)
