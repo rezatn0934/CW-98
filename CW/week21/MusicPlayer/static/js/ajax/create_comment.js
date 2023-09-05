@@ -7,7 +7,7 @@ $('body').on('submit', '#creat_comment', function (event) {
         url: self.attr('action'),
         data: self.serialize(),
         success: function (response) {
-            console.log('comment created')
+            console.log(response.message)
             self.find('#id_content').val('')
             self.find('#msg1').text('Comment created successfully')
         },
