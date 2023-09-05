@@ -1,7 +1,10 @@
 from django.contrib.auth import login
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
+from django.conf import settings
+from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.views import View
 
@@ -42,10 +45,14 @@ class UserRegisterView(View):
             form = ArtistRegisterForm(request.POST)
         elif user_type == 'listener':
             form = ListenerRegisterForm(request.POST)
-
         if form.is_valid():
             user = form.save()
             login(request, user, backend='user.authentication.AuthBackend')
+            subject = 'Welcome'
+            message = 'Welcome to our website.'
+            recipient_list = user.email
+            from_email = settings.EMAIL_HOST_USER
+            send_mail(subject, message, from_email, recipient_list)
             return redirect(reverse('song:home'))
 
         artist_form = ArtistRegisterForm()
