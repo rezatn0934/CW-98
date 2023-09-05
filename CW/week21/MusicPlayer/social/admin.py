@@ -38,3 +38,19 @@ class LikeAdmin(admin.ModelAdmin):
     def song_title(self, obj):
         return obj.song.title
 
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user_username', 'song_title', 'content_description', 'approved')
+    list_filter = ('song__title', )
+    search_fields = ('user_username__istartwith', 'song_title__istartwith')
+
+    def user_username(self, obj):
+        return obj.user.username
+
+    def song_title(self, obj):
+        return obj.song.title
+
+    def content_description(self, obj):
+        if obj.content:
+            return truncatewords(obj.content, 10)
