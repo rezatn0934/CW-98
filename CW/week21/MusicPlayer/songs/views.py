@@ -24,3 +24,24 @@ class Home(LikeMixin, ListView):
         context['artists'] = Artist.objects.all()
         return context
 
+    def get(self, request, *args, **kwargs):
+        search_term = request.GET.get('search')
+
+        items = self.get_queryset()
+        if request.headers.get('HX-Request') == 'true':
+            self.template_name = 'song/search_result.html'
+            if isinstance(search_term, str):
+                if search_term != '':
+                    items = items.filter(title__icontains=search_term)
+                    if not items.exists():
+                        items = ["Nothing Was Found"]
+
+        paginator = Paginator(items, 15)
+
+        page_number = request.GET.get("page")
+        items = paginator.get_page(page_number)
+        context = self.get_context_data(**kwargs)
+        context.update({'songs': items, 'page': page_number, 'search': search_term})
+
+        return render(request, self.template_name, context=context)
+
