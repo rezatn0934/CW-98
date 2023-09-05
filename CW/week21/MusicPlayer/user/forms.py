@@ -58,3 +58,9 @@ class ArtistRegisterForm(CustomUserCreationForm):
         fields = ('username', 'email', 'name', 'bio', 'band', 'image', 'password1', 'password2')
 
 
+class ListenerRegisterForm(CustomUserCreationForm):
+    class Meta(CustomUserCreationForm.Meta):
+        model = Listener
+        fields = ('username', 'email', 'name', 'image', 'password1', 'password2')
+
+
