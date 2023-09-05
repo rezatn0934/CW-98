@@ -7,7 +7,9 @@ from django.views.generic import ListView, DetailView
 from .mixins import LikeMixin
 from .models import Song
 from user.models import Artist
-from social.forms import CommentCreation
+from social.forms import CommentCreation, PlaylistCreation
+
+from social.models import Playlist
 
 
 # Create your views here.
@@ -22,6 +24,7 @@ class Home(LikeMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['artists'] = Artist.objects.all()
+        context['playlists'] = Playlist.objects.filter(owner=self.request.user)
         return context
 
     def get(self, request, *args, **kwargs):
