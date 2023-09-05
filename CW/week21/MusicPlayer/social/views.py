@@ -79,4 +79,11 @@ class UpdatePlayListView(View):
         playlist_id = request.POST.get('playlist_input')
         playlist = self.model.objects.get(id=playlist_id)
         playlist.songs.add(song)
+
+        subject = 'Add song to play list'
+        message = f'Song ({song.title}) has been successfully added to Playlist ({playlist.title})'
+        recipient_list = request.user.email
+        from_email = settings.EMAIL_HOST_USER
+        send_mail(subject, message, from_email, recipient_list)
+
         return JsonResponse({'message': 'successfully added'}, status=200)
