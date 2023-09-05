@@ -2,7 +2,7 @@ from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 
 from .forms import CommentCreation, PlaylistCreation
 from .models import Like, Comment, Playlist
@@ -60,3 +60,16 @@ class CreatPlayListView(CreateView):
     def form_invalid(self, form):
         data = {'error': form.errors}
         return JsonResponse(data, status=400)
+
+
+class UpdatePlayListView(View):
+    model = Playlist
+
+    def post(self, request):
+        song_id = request.POST.get('song_id')
+
+        song = Song.objects.get(id=song_id)
+        playlist_id = request.POST.get('playlist_input')
+        playlist = self.model.objects.get(id=playlist_id)
+        playlist.songs.add(song)
+        return JsonResponse({'message': 'successfully added'}, status=200)
