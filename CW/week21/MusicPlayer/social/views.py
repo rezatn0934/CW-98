@@ -48,3 +48,12 @@ class CreatPlayListView(CreateView):
     model = Playlist
     form_class = PlaylistCreation
 
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        comment.user = self.request.user
+        song_id = self.request.POST.get('song_id')
+        comment.song = Song.objects.get(id=int(song_id))
+        comment.save()
+
+        return JsonResponse({'message': 'successfully created'}, status=200)
+
