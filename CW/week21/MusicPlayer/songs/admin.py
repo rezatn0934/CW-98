@@ -15,7 +15,8 @@ class SongAdmin(admin.ModelAdmin):
     inlines = [UserInline, ]
     list_filter = ('title', 'upload_date')
     search_fields = ('title__istartwith', 'upload_date__istartwith')
-    list_select_related = ('band', 'artist')
+    list_select_related = ('band', )
+
 
     def band_name(self, obj):
         if obj.band:
