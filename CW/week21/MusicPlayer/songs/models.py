@@ -32,6 +32,8 @@ class Song(models.Model):
     def genre_list(self):
         return list(self.genres.all())
 
+    def likes(self):
+        return len(self.like_set.all())
 
 
     def __str__(self):
