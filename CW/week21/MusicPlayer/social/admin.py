@@ -23,3 +23,18 @@ class PlaylistAdmin(admin.ModelAdmin):
     def truncated_description(self, obj):
         if obj.description:
             return truncatewords(obj.description, 10)
+
+
+@admin.register(Like)
+class LikeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user_username', 'song_title')
+    search_fields = ('user_username__istartwith', 'song_title__istartwith')
+    list_per_page = 50
+    list_select_related = ('user', 'song', )
+
+    def user_username(self, obj):
+        return obj.user.username
+
+    def song_title(self, obj):
+        return obj.song.title
+
