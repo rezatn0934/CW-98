@@ -58,3 +58,12 @@ class SongDetailView(LikeMixin, DetailView):
         context['form'] = self.form_class
         return context
 
+    def post(self, request, pk):
+        if 'create_tag' in request.POST:
+            form = self.form_class(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.user = request.user
+                comment.song = self.model.objects.get(id=pk)
+                comment.save()
+            return redirect(reverse('song:song_detail', args=(pk,)))
