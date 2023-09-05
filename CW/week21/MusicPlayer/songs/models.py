@@ -29,6 +29,9 @@ class Song(models.Model):
     def artists(self):
         return list(self.artist_set.all())
 
+    def genre_list(self):
+        return list(self.genres.all())
+
 
 
     def __str__(self):
