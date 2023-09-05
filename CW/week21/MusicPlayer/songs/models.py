@@ -22,7 +22,10 @@ class Song(models.Model):
             return mark_safe(f'<audio controls name="media"><source src="{self.audio_file.url}" type="audio/mpeg"></audio>')
         return ""
 
+    def cover_preview(self):
+        if self.cover_photo:
+            return mark_safe(f'<img src = "{self.cover_photo.url}" width = "150" height="150"/>')
+
 
     def __str__(self):
         return self.title
-
