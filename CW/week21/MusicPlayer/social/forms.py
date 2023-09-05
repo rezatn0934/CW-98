@@ -1,6 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
-from .models import Comment
+from .models import Comment, Playlist
 
 
 class CommentCreation(forms.ModelForm):
@@ -8,3 +7,8 @@ class CommentCreation(forms.ModelForm):
         model = Comment
         fields = ('content', )
 
+
+class PlaylistCreation(forms.ModelForm):
+    class Meta:
+        model = Playlist
+        fields = ('title', )
