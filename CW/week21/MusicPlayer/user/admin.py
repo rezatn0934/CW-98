@@ -82,3 +82,17 @@ class ListenerUserAdmin(AbstractUserAdmin):
             'fields': ('user_status', 'vip_until'),
         }),
     )
+
+
+@admin.register(Band)
+class Band_admin(admin.ModelAdmin):
+    list_display = ('name', 'start_at', 'end_at', 'display_artists')
+
+    list_select_related = ('artist', )
+
+    def display_artists(self, obj):
+        artists = obj.artist_set.all()
+        artist_names = [artist.username for artist in artists]
+        return ', '.join(artist_names)
+
+    display_artists.short_description = 'Artists'
