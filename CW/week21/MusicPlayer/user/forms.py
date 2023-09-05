@@ -64,3 +64,15 @@ class ListenerRegisterForm(CustomUserCreationForm):
         fields = ('username', 'email', 'name', 'image', 'password1', 'password2')
 
 
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(max_length=50, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'id': 'username_email', 'type': 'text', 'name': 'username_email',
+               'placeholder': 'Password'}))
+    password = forms.CharField(max_length=50, widget=forms.PasswordInput(
+        attrs={'class': 'form-control', 'id': 'password', 'type': 'password', 'name': 'password',
+               'placeholder': 'Password'}))
+    remember_me = forms.BooleanField(required=False)
+
+    class Meta:
+        model = AbstractUser
+        fields = ['username', 'password', 'remember_me']
