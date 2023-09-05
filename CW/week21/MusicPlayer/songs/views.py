@@ -13,7 +13,7 @@ from social.forms import CommentCreation
 # Create your views here.
 
 
-class Home(ListView):
+class Home(LikeMixin, ListView):
     template_name = 'song/songs.html'
     model = Song
     context_object_name = 'songs'
