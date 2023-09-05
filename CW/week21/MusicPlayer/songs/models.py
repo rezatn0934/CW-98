@@ -26,6 +26,10 @@ class Song(models.Model):
         if self.cover_photo:
             return mark_safe(f'<img src = "{self.cover_photo.url}" width = "150" height="150"/>')
 
+    def artists(self):
+        return list(self.artist_set.all())
+
+
 
     def __str__(self):
         return self.title
