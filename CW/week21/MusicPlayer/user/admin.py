@@ -17,17 +17,21 @@ class AbstractUserAdmin(UserAdmin):
     fieldsets = [
         [None, {'fields': ['username', 'email', 'password1', 'password2']}],
         ['Personal Info', {'fields': ['name', ]}],
-        ['Permissions', {'fields': ['is_active', 'is_staff', 'is_superuser']}],
+        ['Permissions', {'fields': ['is_active', 'is_staff', 'is_superuser', 'groups']}],
     ]
     add_fieldsets = [
         [None, {'fields': ['username', 'email', 'password1', 'password2']}],
         ['Personal Info', {'fields': ['name', ]}],
-        ['Permissions', {'fields': ['is_active', 'is_staff', 'is_superuser']}],
+        ['Permissions', {'fields': ['is_active', 'is_staff', 'is_superuser', 'groups']}],
     ]
 
-    list_display = ['username', 'email', 'name', 'last_login', 'date_joined', 'is_active', 'is_staff', 'is_superuser']
+    list_display = ['username', 'email', 'name', 'last_login', 'date_joined', 'is_active', 'is_staff', 'is_superuser',
+                    'group_list']
     search_fields = ['username__istartwith', 'email__istartswith', 'name__istartswith']
     ordering = ['date_joined', ]
+
+    def group_list(self, obj):
+        return ",".join([song.title for song in obj.groups.all()])
 
 
 @admin.register(Artist)
@@ -36,7 +40,8 @@ class ArtistUserAdmin(AbstractUserAdmin):
     model = Artist
 
     list_display = ['name', 'songs_list', 'bio', 'band_name', 'username', 'email', 'is_active', 'is_staff',
-                    'is_superuser', 'last_login', 'date_joined', 'img_preview']
+                    'is_superuser', 'group_list', 'last_login', 'date_joined', 'img_preview']
+
     list_select_related = ['band', ]
     fieldsets = (
         *AbstractUserAdmin.fieldsets,
@@ -48,13 +53,14 @@ class ArtistUserAdmin(AbstractUserAdmin):
             'fields': ('bio', 'band', 'songs'),
         }),
     )
+
     search_fields = ['username__istartwith', 'email__istartswith', 'name__istartswith']
     ordering = ['date_joined', ]
 
     def songs_list(self, obj):
         return ",".join([song.title for song in obj.songs.all()])
-    songs_list.short_description = 'Songs List'
 
+    songs_list.short_description = 'Songs List'
 
     def band_name(self, obj):
         if obj.band:
@@ -67,8 +73,10 @@ class ArtistUserAdmin(AbstractUserAdmin):
 class ListenerUserAdmin(AbstractUserAdmin):
     form = ListenerRegisterForm
     modl = Listener
+
     list_display = ['name', 'user_status', 'vip_until', 'username', 'email', 'is_active', 'is_staff',
-                    'is_superuser', 'last_login', 'date_joined', 'img_preview']
+                    'is_superuser', 'group_list', 'last_login', 'date_joined', 'img_preview']
+
     search_fields = ['username__istartwith', 'email__istartswith', 'name__istartswith']
     ordering = ['date_joined', ]
 
@@ -87,8 +95,6 @@ class ListenerUserAdmin(AbstractUserAdmin):
 @admin.register(Band)
 class BandAdmin(admin.ModelAdmin):
     list_display = ('name', 'start_at', 'end_at', 'display_artists')
-
-    list_select_related = ('artist', )
 
     def display_artists(self, obj):
         artists = obj.artist_set.all()

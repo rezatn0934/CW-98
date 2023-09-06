@@ -1,14 +1,12 @@
-
 from django.core.paginator import Paginator
-from django.shortcuts import redirect, reverse, render
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
-
 from .mixins import LikeMixin
+
 from .models import Song
 from user.models import Artist
 from social.forms import CommentCreation, PlaylistCreation
-
 from social.models import Playlist
 
 
@@ -59,14 +57,6 @@ class SongDetailView(LikeMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = self.form_class
+        context['form1'] = PlaylistCreation()
+        context['playlists'] = Playlist.objects.filter(owner=self.request.user)
         return context
-
-    def post(self, request, pk):
-        if 'create_tag' in request.POST:
-            form = self.form_class(request.POST)
-            if form.is_valid():
-                comment = form.save(commit=False)
-                comment.user = request.user
-                comment.song = self.model.objects.get(id=pk)
-                comment.save()
-            return redirect(reverse('song:song_detail', args=(pk,)))

@@ -4,6 +4,13 @@ from .models import Artist, Listener, Band, AbstractUser
 
 
 class CustomUserChangeForm(UserChangeForm):
+    password1 = forms.CharField(label="Password", widget=forms.PasswordInput(
+        attrs={'class': 'form-control', 'id': 'password1', 'type': 'password', 'name': 'password1',
+               'placeholder': 'Password'}))
+    password2 = forms.CharField(label="Confirm Password", widget=forms.PasswordInput(
+        attrs={'class': 'form-control', 'id': 'password2', 'type': 'password', 'name': 'password2',
+               'placeholder': 'Password'}))
+
     class Meta:
         model = AbstractUser
         fields = '__all__'

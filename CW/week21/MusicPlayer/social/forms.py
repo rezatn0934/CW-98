@@ -5,10 +5,15 @@ from .models import Comment, Playlist
 class CommentCreation(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ('content', )
+        fields = ('content',)
 
 
 class PlaylistCreation(forms.ModelForm):
     class Meta:
         model = Playlist
-        fields = ('title', )
+        fields = ('title',)
+        labels = {'title': ''}
+        widgets = {
+            'title': forms.TextInput(
+                attrs={'class': 'form-control', 'id': 'creatPlaylist'})
+        }

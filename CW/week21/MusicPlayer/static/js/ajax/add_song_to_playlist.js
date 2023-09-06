@@ -3,9 +3,7 @@ $('body').on('submit', '#selectPlaylist', function (event) {
     let self = $(this)
     let playlist_option = self.find("[name='playlist_option']")
     let playlist_input = self.find("[name='playlist_input']")
-    console.log('1')
     playlist_input.val(playlist_option.val())
-    console.log(playlist_input.val())
     $.ajax({
         type: 'Post',
         url: self.attr('action'),
@@ -18,7 +16,6 @@ $('body').on('submit', '#selectPlaylist', function (event) {
             console.log('', response)
         }
     })
-    console.log('test 2')
     setTimeout(function () {
         $('body').off('submit', '#creat_comment');
         self.find('#msg1').text('')

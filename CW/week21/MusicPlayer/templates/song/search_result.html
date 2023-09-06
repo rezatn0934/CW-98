@@ -1,3 +1,4 @@
+{% load vip_tag %}
 <div class="row oneMusic-albums">
     {% for song in songs %}
         {% if songs.0 == "Nothing Was Found" %}
@@ -37,13 +38,14 @@
                                             <i class="bi bi-heart-fill {% if song.liked %} like_red {% endif %}"></i>
                                         </button>
                                         <small id="like_count">{{ song.likes }}</small>
-                                        <a data-toggle="collapse" href="#collapseExample{{ song.id }}select"
-                                           role="button"
-                                           aria-expanded="false"
-                                           aria-controls="collapseExample"
-                                           class="advanced text-decoration-none text-dark ml-2">
+                                        {% if request.user|has_vip_perm:"Managers" %}
+                                            <a data-toggle="collapse" href="#collapseExample1"
+                                               role="button"
+                                               aria-expanded="false"
+                                               aria-controls="collapseExample"
+                                               class="advanced text-decoration-none text-dark ml-2">
                                             <i class="bi bi-bookmark-plus"></i>
-                                        </a>
+                                        {% endif %}
                                     </div>
                                 </form>
                             </div>
@@ -54,24 +56,32 @@
                         <div class="collapse ratio" style="--bs-aspect-ratio: 30%;"
                              id="collapseExample{{ song.id }}select">
                             <div class="alert" role="alert"><p id="msg1"></p></div>
-                            <form method="post" action="{% url 'social:update_playlist' %}" id="selectPlaylist"
-                                  class="align-items-center justify-content-center p-1">
-                                {% csrf_token %}
-                                <input type="hidden" name="song_id" value="{{ song.id }}">
-                                <input type="hidden" name="playlist_input" value="">
-                                <select name="playlist" id="dselect-example" class="form-control"
-                                        data-live-search="true">
-                                    <option value="" disabled selected>-- Choose a Playlist --</option>
-                                    {% for playlist in playlists %}
-                                        {% if song not in playlist.song_list %}
-                                            <option name="playlist_option"
-                                                    value="{{ playlist.id }}">{{ playlist.title }}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                                <button type="submit" class="btn oneMusic-btn mt-1"><i class="bi bi-check2-circle">Select</i>
-                                </button>
-                            </form>
+                            {% if request.user|has_vip_perm:"vip" %}
+                                {% if playlists %}
+                                    <form method="post" action="{% url 'social:update_playlist' %}"
+                                          id="selectPlaylist"
+                                          class="align-items-center justify-content-center p-0 m-0">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="song_id" value="{{ song.id }}">
+                                        <input type="hidden" name="playlist_input" value="">
+                                        <select name="playlist" id="dselect-example" class="form-select"
+                                                data-live-search="true" style="overflow-x: auto !important;">
+                                            <option value="" disabled selected>-- Choose a Playlist --
+                                            </option>
+                                            {% for playlist in playlists %}
+                                                {% if song not in playlist.song_list %}
+                                                    <option name="playlist_option"
+                                                            value="{{ playlist.id }}">{{ playlist.title }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="btn oneMusic-btn mt-1"><i
+                                                class="bi bi-check2-circle">Select</i>
+                                        </button>
+                                        <div class="alert" role="alert"><p id="msg1"></p></div>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
