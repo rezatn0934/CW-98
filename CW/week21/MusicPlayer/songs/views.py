@@ -1,14 +1,12 @@
-from django.core.mail import send_mail
 from django.core.paginator import Paginator
-from django.shortcuts import redirect, reverse, render
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
-from django.conf import settings
 from .mixins import LikeMixin
+
 from .models import Song
 from user.models import Artist
 from social.forms import CommentCreation, PlaylistCreation
-
 from social.models import Playlist
 
 
@@ -59,4 +57,6 @@ class SongDetailView(LikeMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = self.form_class
+        context['form1'] = PlaylistCreation()
+        context['playlists'] = Playlist.objects.filter(owner=self.request.user)
         return context
