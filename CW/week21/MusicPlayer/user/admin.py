@@ -39,9 +39,8 @@ class ArtistUserAdmin(AbstractUserAdmin):
     form = ArtistRegisterForm
     model = Artist
 
-    list_display = [
-        *AbstractUserAdmin.list_display,
-        'songs_list', 'bio', 'band_name', 'img_preview']
+    list_display = ['name', 'songs_list', 'bio', 'band_name', 'username', 'email', 'is_active', 'is_staff',
+                    'is_superuser', 'group_list', 'last_login', 'date_joined', 'img_preview']
 
     list_select_related = ['band', ]
     fieldsets = (
@@ -74,9 +73,9 @@ class ArtistUserAdmin(AbstractUserAdmin):
 class ListenerUserAdmin(AbstractUserAdmin):
     form = ListenerRegisterForm
     modl = Listener
-    list_display = [
-        *AbstractUserAdmin.add_fieldsets,
-        'user_status', 'vip_until', 'img_preview']
+
+    list_display = ['name', 'user_status', 'vip_until', 'username', 'email', 'is_active', 'is_staff',
+                    'is_superuser', 'group_list', 'last_login', 'date_joined', 'img_preview']
 
     search_fields = ['username__istartwith', 'email__istartswith', 'name__istartswith']
     ordering = ['date_joined', ]
