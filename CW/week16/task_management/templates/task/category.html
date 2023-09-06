@@ -42,56 +42,47 @@
                                 <a data-toggle="collapse" href="#collapseExample" role="button"
                                    aria-expanded="false"
                                    aria-controls="collapseExample"
-                                   class="advanced text-decoration-none text-light"> Add category
-                                    Filters <i class="fa fa-angle-down"></i>
+                                   class="advanced text-decoration-none text-dark">Create Category
+                                    <i class="fa fa-angle-down"></i>
                                 </a>
                                 <div class="collapse" id="collapseExample">
                                     <div class="card card-body">
                                         <div class="row g-3 mt-2 justify-content-center">
                                             <form action="{% url 'categories' %}" method="POST">
-                                                <div class="col-md-3 justify-content-center d-flex">
-
-                                                    {% csrf_token %}
-                                                    <div class="form-group text-dark">
-                                                        <label for="category_name">Category name:</label>
-                                                        <input type="text" class="form-control" id="category_name"
-                                                               name="category_name">
+                                                {% csrf_token %}
+                                                {% for field in form %}
+                                                    <div class="fieldWrapper">
+                                                        {{ field.errors }}
+                                                        {{ field.label_tag }} {{ field }}
                                                     </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label for="category_description">Category description</label>
-                                                        <textarea class="form-control" id="category_description"
-                                                                  name="category_description"></textarea>
-                                                    </div>
-                                                </div>
+                                                {% endfor %}
                                                 <div class="col-md-3">
                                                     <button class="btn btn-secondary btn-block">Add</button>
                                                 </div>
-                                        </form>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row gx-5 justify-content-center">
-                <div class="col-lg-5">
-                    {% for category in categories %}
-                        <div class="card my-4 justify-content-center" style="background: rgba(50, 100, 150, .3)">
-                            <div class="card-body ">
-                                <h5 class="card-title text-center">
-                                    <a class="text-decoration-none text-dark"
-                                       href="{% url 'category_detail' category.pk %}">{{ category.name }}</a>
-                                </h5>
-                                <p class="card-text text-light">{{ category.description|truncatewords:5 }}</p>
+                <div class="row gx-5 justify-content-center">
+                    <div class="col-lg-5">
+                        {% for category in categories %}
+                            <div class="card my-4 justify-content-center" style="background: rgba(50, 100, 150, .3)">
+                                <div class="card-body ">
+                                    <h5 class="card-title text-center">
+                                        <a class="text-decoration-none text-dark"
+                                           href="{% url 'category_detail' category.pk %}">{{ category.name }}</a>
+                                    </h5>
+                                    <p class="card-text text-light">{{ category.description|truncatewords:5 }}</p>
+                                </div>
                             </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-
         </div>
     </section>
 {% endblock %}

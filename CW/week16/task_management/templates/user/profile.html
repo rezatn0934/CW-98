@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row gx-3 gx-lg-5 align-items-center my-5 justify-content-center">
+            <div class="col-lg-7">
+                {{ request.user.img_preview }}
+            </div>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-lg-5">
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary me-2">Submit</button>
+
+                    <button type="button" class="btn btn-primary me-2"><a class="text-dark text-decorator-none"
+                                                                          href="{% url 'change_pass' %}">Change
+                        Password</a></button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

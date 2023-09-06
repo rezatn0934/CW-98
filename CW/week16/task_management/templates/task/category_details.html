@@ -18,21 +18,13 @@
                                     <div class="card card-body">
                                         <div class="row g-3 mt-2 justify-content-center">
                                             <form action="{% url 'category_detail' category.id %}" method="POST">
-                                                <div class="col-md-3 justify-content-center d-flex">
-                                                    {% csrf_token %}
-                                                    <div class="form-group text-dark">
-                                                        <label for="category_name">Category name:</label>
-                                                        <input type="text" class="form-control" id="category_name" value='{{ category.name }}'
-                                                               name="category_name">
+                                                {% csrf_token %}
+                                                {% for field in form %}
+                                                    <div class="fieldWrapper">
+                                                        {{ field.errors }}
+                                                        {{ field.label_tag }} {{ field }}
                                                     </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label for="category_description">Category description</label>
-                                                        <textarea class="form-control" id="category_description"
-                                                                  name="category_description">category.description</textarea>
-                                                    </div>
-                                                </div>
+                                                {% endfor %}
                                                 <div class="col-md-3">
                                                     <button class="btn btn-secondary btn-block">Change</button>
                                                 </div>
@@ -44,77 +36,77 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row gx-5 justify-content-center">
-                <div class="col-lg-8">
-                    <div class="card my-4 justify-content-center" style="background: rgba(50, 100, 150, .3)">
-                        <div class="card-body">
-                            <h5 class="card-title text-center">{{ category.name }}</h5>
-                            <p class="card-text">{{ category.description }}</p>
+                <div class="row gx-5 justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="card my-4 justify-content-center" style="background: rgba(50, 100, 150, .3)">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">{{ category.name }}</h5>
+                                <p class="card-text">{{ category.description }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row gx-4 gx-lg-5 pt-2 text-white">
-                {% for task in tasks %}
-                    <div class="col-lg-4 col-sm-6 mb-5">
-                        <div class="card h-100 bg-gradient"
-                             style="background: linear-gradient(to right top, black, gray,slategrey, bisque)">
-                            <div class="card-body">
-                                <h2 class="card-title"><a class="text-decoration-none text-dark"
-                                                          href='{% url 'task_detail' task.id %}'>{{ task.title }}</a>
-                                </h2>
-                                <p class="card-text">{{ task.description | truncatewords:5 }}</p>
-                                <p class="card-small">Status: {{ task.get_status_display }}</p>
-                                <p class="card-small">Due date: {{ task.due_date }}</p>
-                            </div>
-                            <div class="card-footer"><a class="btn btn-secondary btn-sm"
-                                                        href="{% url 'task_detail' task.id %}">More Info</a>
+                <div class="row gx-4 gx-lg-5 pt-2 text-white">
+                    {% for task in tasks %}
+                        <div class="col-lg-4 col-sm-6 mb-5">
+                            <div class="card h-100 bg-gradient"
+                                 style="background: linear-gradient(to right top, black, gray,slategrey, bisque)">
+                                <div class="card-body">
+                                    <h2 class="card-title"><a class="text-decoration-none text-dark"
+                                                              href='{% url 'task_detail' task.id %}'>{{ task.title }}</a>
+                                    </h2>
+                                    <p class="card-text">{{ task.description | truncatewords:5 }}</p>
+                                    <p class="card-small">Status: {{ task.get_status_display }}</p>
+                                    <p class="card-small">Due date: {{ task.due_date }}</p>
+                                </div>
+                                <div class="card-footer"><a class="btn btn-secondary btn-sm"
+                                                            href="{% url 'task_detail' task.id %}">More Info</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {% empty %}
-                    <p>No related tasks found.</p>
-                {% endfor %}
-            </div>
-            <div class="d-flex justify-content-center">
-                <!-- Display pagination links -->
-                {% if tasks.has_other_pages %}
-                    <ul class="pagination">
-                        {% if tasks.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page=
-                                    {{ tasks.previous_page_number }}">prev</a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled">
-                                <span class="page-link">prev</span>
-                            </li>
-                        {% endif %}
-                        {% for page in tasks.paginator.page_range %}
-                            {% if tasks.number == page %}
-                                <li class="page-item active">
-                                    <span class="page-link">{{ page }}</span>
-                                </li>
-                            {% else %}
+                    {% empty %}
+                        <p>No related tasks found.</p>
+                    {% endfor %}
+                </div>
+                <div class="d-flex justify-content-center">
+                    <!-- Display pagination links -->
+                    {% if tasks.has_other_pages %}
+                        <ul class="pagination">
+                            {% if tasks.has_previous %}
                                 <li class="page-item">
                                     <a class="page-link" href="?page=
-                                        {{ page }}">{{ page }}</a>
+                                    {{ tasks.previous_page_number }}">prev</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">prev</span>
                                 </li>
                             {% endif %}
-                        {% endfor %}
-                        {% if tasks.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page=
+                            {% for page in tasks.paginator.page_range %}
+                                {% if tasks.number == page %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ page }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=
+                                        {{ page }}">{{ page }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if tasks.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=
                                     {{ tasks.next_page_number }}">next</a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled">
-                                <span class="page-link">next</span>
-                            </li>
-                        {% endif %}
-                    </ul>
-                {% endif %}
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">next</span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </section>

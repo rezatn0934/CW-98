@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/task_detail.css' %}">
+    <style>
+        body {
+            background-image: url("{% static 'image/img-05.jpg' %}") !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+    <div class="card">
+        You cant see this post
+    </div>
+    </body>
+    </html>
+{% endblock %}

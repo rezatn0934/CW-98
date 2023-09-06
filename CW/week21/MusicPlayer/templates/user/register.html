@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <!-- ##### Breadcumb Area Start ##### -->
+    <section class="breadcumb-area bg-img bg-overlay"
+             style="background-image: url({% static 'img/bg-img/breadcumb3.jpg' %});">
+        <div class="bradcumbContent">
+            <h2>Register</h2>
+            <div class="content-header">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div id="msg" class="alert {{ message.tags }}" role="alert">
+                                {{ message }}
+                            </div>
+
+                        {% endfor %}
+                    {% endif %}
+                    <br>
+                </div>
+        </div>
+    </section>
+    <!-- ##### Breadcumb Area End ##### -->
+
+    <!-- ##### Login Area Start ##### -->
+    <section class="login-area section-padding-100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-8">
+                    <div class="login-content">
+                        <h3>Register</h3>
+                        <h4>
+                            <label for="show"></label>
+                            <input type="radio" name="flexRadioDefault" id="show" checked>Listener
+                            <label for="hide"></label>
+                            <input type="radio" name="flexRadioDefault" id="hide">Artist
+                        </h4>
+
+                        <!-- Login Form -->
+                        <div class="login-form" id="artist" style="display:none">
+                            <form action='{% url 'user:register' %}' method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="user" value="artist">
+                                <div class="form-group">
+                                    {{ artist_form.as_p }}
+                                </div>
+
+                                <button type="submit" class="btn oneMusic-btn mt-30">Register</button>
+                            </form>
+                        </div>
+                        <div class="login-form" id="listener">
+                            <form action='{% url 'user:register' %}' method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="user" value="listener">
+                                <div class="form-group">
+                                    {{ listener_form.as_p }}
+                                </div>
+                                <button type="submit" class="btn oneMusic-btn mt-30">Register</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ##### Login Area End ##### -->
+{% endblock content %}
+
+
+{% block footer %}
+    <script>
+        $(document).ready(function () {
+            $("#hide").click(function () {
+                $("#listener").slideUp();
+                $("#artist").slideDown();
+            });
+            $("#show").click(function () {
+                $("#listener").slideDown();
+                $("#artist").slideUp();
+            });
+
+        });
+
+    </script>
+{% endblock %}

@@ -5,7 +5,6 @@
     <div class="card">
         {{ todo }}
     </div>
-
     <div class="card">
         <form action="{% url 'todo_detail' todo.id %}" method="post">
             {% csrf_token %}

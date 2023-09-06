@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <div class="content-wrapper">
+        <div class="container px-4 px-lg-5">
+            {% if messages %}
+                {% for message in messages %}
+                    <div id="msg" class="alert {{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="row gx-4 gx-lg-5 align-items-center my-5">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="col-lg-7">
+                        {{ form.as_p }}
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary me-2">Change Password</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

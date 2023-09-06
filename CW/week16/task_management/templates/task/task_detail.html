@@ -2,48 +2,11 @@
 {% load static %}
 
 {% block style %}
+    <link rel="stylesheet" href="{% static 'css/task_detail.css' %}">
     <style>
         body {
             background-image: url("{% static 'image/img-05.jpg' %}") !important;
         }
-
-        /* make the content take up more vertical space */
-        .content-wrapper {
-            min-height: calc(100vh - 200px); /* adjust the value as needed */
-        }
-
-        /* style for the card */
-        .card {
-            border-radius: 20px;
-            border: none;
-            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .card-text {
-            font-size: 1.5rem;
-            color: #555;
-            margin-bottom: .8rem;
-        }
-
-        .card-tag {
-            font-size: 1.3rem;
-            color: #6c5555;
-            margin-bottom: 1.5rem;
-        }
-
-        .card-small {
-            font-size: 1.2rem;
-            color: #777;
-        }
-
-
     </style>
 {% endblock %}
 
@@ -66,14 +29,12 @@
                                         {% csrf_token %}
                                         <input type="hidden" name="create_tag" value="create_tag">
                                         <div class="row g-3 mt-2 flex-wrap">
-                                            <div class="col-md-4">
-                                                <div class="form-group text-dark">
-                                                    <label for="task_name"> </label>
-                                                    <input type="text" class="form-control" id="task_name"
-                                                           placeholder="Tag label:"
-                                                           name="tag_label">
+                                            {% for field in form %}
+                                                <div class="fieldWrapper">
+                                                    {{ field.errors }}
+                                                    {{ field.label_tag }} {{ field }}
                                                 </div>
-                                            </div>
+                                            {% endfor %}
                                             <div class="col-md-4">
                                                 <button class="btn btn-secondary btn-block">Create tag</button>
                                             </div>
@@ -83,99 +44,8 @@
                             </div>
                         </div>
                         <div class="mt-3">
-                            <a data-toggle="collapse" href="#collapseExample2" role="button"
-                               aria-expanded="false"
-                               aria-controls="collapseExample2"
-                               class="advanced text-decoration-none text-light">Add new task
-                                <i class="fa fa-angle-down"></i>
+                            <a href="{% url 'update_task' task.id %}">Update Task
                             </a>
-                            <div class="collapse" id="collapseExample2">
-                                <div class="card card-body">
-                                    <form action="{% url 'task_detail' task.id %}" method="POST">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="update_task" value="create_tag">
-                                        <div class="row g-3 mt-2 flex-wrap">
-                                            <div class="col-md-4">
-                                                <div class="form-group text-dark">
-                                                    <label for="task_name"></label>
-                                                    <input type="text" class="form-control" id="task_name"
-                                                           placeholder="Task title:" value="{{ task.title }}"
-                                                           name="task_name">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="task_description"></label>
-                                                    <textarea class="form-control" id="task_description"
-                                                              placeholder="Task description:"
-                                                              name="task_description">{{ task.description }}</textarea>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <select id="select" class="form-select" multiple
-                                                            aria-label="multiple select example" name="tags">
-                                                        <option selected>Select task tag(multi choice):</option>
-                                                        {% for tag in tags %}
-                                                            {% if tag in task.tag.all %}
-                                                                <option value="{{ tag.id }}"
-                                                                        selected> {{ tag.label }} </option>
-                                                            {% else %}
-                                                                <option value="{{ tag.id }}"> {{ tag.label }} </option>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </select>
-                                                    <label for="select" class="form-label select-label"></label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="status"></label>
-                                                    <select id="status" class="form-select" name="status">
-                                                        <option value="" selected disabled>Select task status:
-                                                        </option>
-                                                        {% for stat in stats %}
-                                                            {% if stat == task.status %}
-                                                                <option value="{{ stat }}" selected>{{ stat }}</option>
-                                                            {% else %}
-                                                                <option value="{{ stat }}">{{ stat }}</option>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <select id="select" class="form-select" name="category">
-                                                        <option selected>Select task category:</option>
-                                                        {% for category in categories %}
-                                                            {% if category.id == task.category.id %}
-                                                                <option value="{{ category.id }}"
-                                                                        selected> {{ category.name }} </option>
-                                                            {% else %}
-                                                                <option value="{{ category.id }}"> {{ category.name }} </option>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </select>
-                                                    <label for="select" class="form-label select-label"></label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="formGroupExampleInput3"></label>
-                                                    <input required type="date" class="form-control"
-                                                           id="formGroupExampleInput3" placeholder="due_date"
-                                                           value="{{ task.due_date|date:'Y-m-d' }}"
-                                                           name="due_date">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <button class="btn btn-secondary btn-block">Update task</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -190,7 +60,7 @@
                             <p class="card-text text-light">{{ task.description }}</p>
                             <p class="card-tag">Category:<a class="text-decoration-none"
                                                             href="{% url 'category_detail' task.category.id %}"
-                                                            style="color: #6c5555;">{{ task.category }}</a> | Tags:
+                                                            style="color: #6c5555;">{{ task.category }}</a> | Tags:stats
                                 {% for tag in task.tag.all %}
                                     # {{ tag.label }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}

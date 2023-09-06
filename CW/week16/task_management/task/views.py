@@ -1,21 +1,35 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.views.generic import ListView, DetailView, UpdateView, FormView, CreateView
+from django.views import View
+from django.urls import reverse_lazy
 from .models import Task, Category, Tag
+from .forms import CreatTaskForm, UpdateTaskForm, CreateCategoryForm, UpdateCategoryForm, CreateTagForm
+from .mixins import TodoOwnerRequiredMixin
+
+
 # Create your views here.
 
 
-def home_view(request):
-    tasks = Task.objects.all().order_by('due_date')
+class HomeView(ListView):
+    template_name = 'task/home.html'
+    model = Task
+    paginate_by = 5
+    context_object_name = 'tasks'
 
-    first_task = tasks[0]
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            context['tasks'] = self.model.objects.filter(user=self.request.user).order_by('due_date').distinct()
+        else:
+            context['tasks'] = None
 
-    paginator = Paginator(tasks[1:], 6)
-    page_number = request.GET.get('page', 1)
-    tasks = paginator.get_page(page_number)
-    context = {'tasks': tasks, 'first_task': first_task}
-
-    return render(request, 'task/home.html', context)
+        if context['tasks']:
+            context['first_task'] = context['tasks'][0]
+        else:
+            context['first_task'] = None
+        return context
 
 
 def all_seeing_eye_view(request):
@@ -56,57 +70,46 @@ def all_seeing_eye_view(request):
             'categories': categories,
         }
         return render(request, 'task/tasks_list.html', context)
-    elif request.method == 'POST':
-        task_title = request.POST.get('task_name')
-        task_description = request.POST.get('task_description')
-        status = request.POST.get('status')
-        category = get_object_or_404(Category, pk=request.POST.get('category'))
-        due_date = request.POST.get('due_date')
-        task = Task.objects.create(title=task_title, description=task_description, category=category, status=status, due_date=due_date)
-        tag_ids = map(int, request.POST.getlist('tags'))
-        tags = Tag.objects.filter(id__in=tag_ids)
-        for tag in tags:
-            task.tag.add(tag)
-        return redirect(request.path)
 
 
-def tasks_tale_view(request, pk):
-    if request.method == 'GET':
-        task = get_object_or_404(Task, pk=pk)
-        stats = []
-        status_label = []
-        for i in Task.STATUS_CHOICES:
-            status_label.append(i[0])
-            stats.append(i[0])
-        tags = Tag.objects.all()
-        categories = Category.objects.all()
-        context = {
-            'task': task,
-            'tags': list(tags),
-            'stats': stats,
-            'categories': categories,
-        }
-        return render(request, 'task/task_detail.html', context)
-    elif request.method == 'POST':
-        print(request.POST)
+class CreateTask(CreateView):
+    template_name = 'task/creat_task.html'
+    model = Task
+    fields = ['title', 'description', 'due_date', 'status', 'category', 'tag']
+    success_url = reverse_lazy('task_list')
+
+
+    def form_valid(self, form):
+        task = form.save(commit=False)
+        task.user = self.request.user
+        task.save()
+        return super().form_valid(form)
+
+
+class UpdateTask(UpdateView):
+    template_name = 'task/creat_task.html'
+    model = Task
+    fields = ['title', 'description', 'due_date', 'status', 'category', 'tag']
+    success_url = reverse_lazy('task_list')
+
+
+class TaskDetail(TodoOwnerRequiredMixin, DetailView):
+    model = Task
+    context_object_name = 'task'
+    template_name = 'task/task_detail.html'
+    form_class = CreateTagForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.form_class
+        return context
+
+    def post(self, request, pk):
         if 'create_tag' in request.POST:
-            tas_label = request.POST.get('tag_label')
-            Tag.objects.create(label=tas_label)
-            return redirect(request.path)
-        elif 'update_task' in request.POST:
-            task = get_object_or_404(Task, pk=pk)
-            task.title = request.POST.get('task_name')
-            task.description = request.POST.get('task_description')
-            task.status = request.POST.get('status')
-            task.category = get_object_or_404(Category, pk=request.POST.get('category'))
-            task.due_date = request.POST.get('due_date')
-            task.save()
-            task.tag.clear()
-            tag_ids = map(int, request.POST.getlist('tags'))
-            tags = Tag.objects.filter(id__in=tag_ids)
-            for tag in tags:
-                task.tag.add(tag)
-            return redirect(request.path)
+            form = CreateTagForm(request.POST)
+            if form.is_valid():
+                form.save()
+            return redirect('task_detail', pk=pk)
 
 
 def task_search_view(request):
@@ -128,41 +131,47 @@ def task_search_view(request):
                                   Q(description__icontains=search_query) |
                                   Q(category__name__icontains=search_query))
 
-            products = Product.objects.filter(*query_list).distinct()
+            search_results = Task.objects.filter(*query_list).distinct()
+            paginator = Paginator(search_results, 3)
+            page_number = request.GET.get('page', 1)
+            search_results = paginator.get_page(page_number)
         else:
-            products = None
-        paginator = Paginator(search_results, 3)
-        page_number = request.GET.get('page', 1)
-        search_results = paginator.get_page(page_number)
+            search_results = None
     else:
         search_results = None
     return render(request, 'task/search.html', {'search_query': search_query, 'search_results': search_results})
 
 
-def categories_view(request):
-    if request.method == 'GET':
-        categories = Category.objects.all()
-        context = {'categories': categories}
-        return render(request, 'task/category.html', context)
-    elif request.method == 'POST':
-        categories_name = request.POST.get('category_name')
-        categories_description = request.POST.get('category_description')
-        Category.objects.create(name=categories_name, description=categories_description)
-        return redirect(request.path)
+class CategoryView(FormView):
+    model = Category
+    template_name = 'task/category.html'
+    form_class = CreateCategoryForm
+    context_object_name = 'categories'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
+
+    def form_valid(self, form):
+        name = form.cleaned_data['name']
+        description = form.cleaned_data['description']
+        category = self.model.objects.create(name=name, description=description)
+        return redirect('category_detail', pk=category.id)
 
 
 def category_detail_view(request, pk):
     category = Category.objects.get(pk=pk)
+    tasks = Task.objects.filter(category=category)
+    paginator = Paginator(tasks, 3)
+    page_number = request.GET.get('page', 1)
+    tasks = paginator.get_page(page_number)
     if request.method == 'GET':
-        tasks = Task.objects.filter(category=category)
-        paginator = Paginator(tasks, 3)
-        page_number = request.GET.get('page', 1)
-        tasks = paginator.get_page(page_number)
-        context = {'category': category, 'tasks': tasks}
+        form = UpdateCategoryForm(instance=category)
+        context = {'category': category, 'tasks': tasks, 'form': form}
         return render(request, 'task/category_details.html', context)
     elif request.method == 'POST':
-        category.name = request.POST.get('category_name')
-        category.description = request.POST.get('category_description')
-        category.save()
-        return redirect(request.path)
-
+        form = UpdateCategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+        return redirect('category_detail', pk=category.id)

@@ -1,0 +1,91 @@
+{% load vip_tag %}
+<div class="row oneMusic-albums">
+    {% for song in songs %}
+        {% if songs.0 == "Nothing Was Found" %}
+            <div class="col-sm-3">
+                <p class="pt-1">Nothing Was Found</p>
+            </div>
+        {% else %}
+            <!-- Single Album -->
+            <div class="col-12 col-sm-4 col-md-3 col-lg-3 single-album-item mb-4">
+                <div class="single-album">
+                    <img style="height: 150px !important; width: 150px !important;" src="{{ song.cover_photo.url }}"
+                         alt="">
+                    <div class="album-info">
+                        <a href='{% url 'song:song_detail' song.id %}'>
+                            <h5>{{ song.title }}</h5>
+                        </a>
+                        <p>
+                            {% for artist in song.artists %}
+                                {{ artist.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </p>
+                        <small>
+                            {% for genre in song.genre_list %}
+                                {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </small>
+                        {% if request.user.is_authenticated %}
+                            <div class="p-2 m-2 text-left">
+                                <form action="{% url 'social:like' %}" id="like_form" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="like" value="{{ song.id }}">
+                                    <input type="hidden" name="like_input" {% if song.liked %}
+                                           value="unlike" {% else %} value="like" {% endif %}>
+                                    <div class="mt-2">
+                                        <button type="submit" name="like_button" class="border-0"
+                                                style="font-size: large !important;">
+                                            <i class="bi bi-heart-fill {% if song.liked %} like_red {% endif %}"></i>
+                                        </button>
+                                        <small id="like_count">{{ song.likes }}</small>
+                                        {% if request.user|has_vip_perm:"Managers" %}
+                                            <a data-toggle="collapse" href="#collapseExample1"
+                                               role="button"
+                                               aria-expanded="false"
+                                               aria-controls="collapseExample"
+                                               class="advanced text-decoration-none text-dark ml-2">
+                                            <i class="bi bi-bookmark-plus"></i>
+                                        {% endif %}
+                                    </div>
+                                </form>
+                            </div>
+                        {% endif %}
+                        <audio preload="auto" style="width: 100%" controls>
+                            <source src="{{ song.audio_file.url }}" type="audio/mpeg">
+                        </audio>
+                        <div class="collapse ratio" style="--bs-aspect-ratio: 30%;"
+                             id="collapseExample{{ song.id }}select">
+                            <div class="alert" role="alert"><p id="msg1"></p></div>
+                            {% if request.user|has_vip_perm:"vip" %}
+                                {% if playlists %}
+                                    <form method="post" action="{% url 'social:update_playlist' %}"
+                                          id="selectPlaylist"
+                                          class="align-items-center justify-content-center p-0 m-0">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="song_id" value="{{ song.id }}">
+                                        <input type="hidden" name="playlist_input" value="">
+                                        <select name="playlist" id="dselect-example" class="form-select"
+                                                data-live-search="true" style="overflow-x: auto !important;">
+                                            <option value="" disabled selected>-- Choose a Playlist --
+                                            </option>
+                                            {% for playlist in playlists %}
+                                                {% if song not in playlist.song_list %}
+                                                    <option name="playlist_option"
+                                                            value="{{ playlist.id }}">{{ playlist.title }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="btn oneMusic-btn mt-1"><i
+                                                class="bi bi-check2-circle">Select</i>
+                                        </button>
+                                        <div class="alert" role="alert"><p id="msg1"></p></div>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
