@@ -8,7 +8,7 @@ class Playlist(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField(null=True, blank=True)
     owner = models.ForeignKey(AbstractUser, on_delete=models.CASCADE)
-    songs = models.ManyToManyField(Song)
+    songs = models.ManyToManyField(Song, blank=True)
 
     def __str__(self):
         return self.title
