@@ -4,5 +4,14 @@
 {% block content %}
     <div class="card">
         {{ todos }}
+
+        {% for todo in todos %}
+            <a href="{% url 'todo_detail' todo.id %}">
+                {% if request.user == todo.user %}
+                    {{ todo.title }}
+                    {{ todo.description }}
+                {% endif %}
+            </a>
+        {% endfor %}
     </div>
 {% endblock %}

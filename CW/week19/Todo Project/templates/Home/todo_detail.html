@@ -5,4 +5,15 @@
     <div class="card">
         {{ todo }}
     </div>
+    <div class="card">
+        <form action="{% url 'todo_detail' todo.id %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-success" name="update">
+                    Submit
+                </button>
+            </div>
+        </form>
+    </div>
 {% endblock %}

@@ -1,8 +1,13 @@
+
+from django.contrib import admin
 from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.IndexView, name='index'),
-    path('todos/', views.TodoListView, name='todo_list'),
-    path('todos/<int:pk>/', views.TodoDetailView, name='todo_detail'),
+    path('admin/', admin.site.urls),
+    path('', views.IndexView.as_view(), name='index'),
+    path('todos/', views.TodoListView.as_view(), name='todo_list'),
+    path('todos/<int:pk>', views.TodoDetailView.as_view(), name='todo_detail'),
+    path('todos/<int:pk>', views.TankYou.as_view(), name='thank_you'),
+    path('permision/', views.permision, name='permision')
 ]
