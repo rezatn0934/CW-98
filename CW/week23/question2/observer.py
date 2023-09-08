@@ -1,13 +1,12 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from random import randrange
 from typing import List
 
 
 class Observer(ABC):
     @abstractmethod
-    def update(self, temperature, humidity):
+    def update(self, weather_info: 'WeatherStation') -> None:
         pass
 
 
@@ -42,10 +41,9 @@ class WeatherStation(Station):
         self._observers.remove(observer)
 
     def notifying(self) -> None:
-
         print("Subject: Notifying observers...")
         for observer in self._observers:
-            observer.update(self.temperature, self.humidity)
+            observer.update(self)
 
     def set_measurements(self, temperature, humidity):
         self.temperature = temperature
@@ -54,13 +52,15 @@ class WeatherStation(Station):
 
 
 class TemperatureDisplay(Observer):
-    def update(self, temperature, humidity):
-        print(f"Temperature: {temperature}")
+    def update(self, weather_info: WeatherStation) -> None:
+        print(f"Temperature: {weather_info.temperature}")
+        print(f"Humidity: {weather_info.humidity}")
 
 
 class HumidityDisplay(Observer):
-    def update(self, temperature, humidity):
-        print(f"Humidity: {humidity}")
+    def update(self, weather_info: WeatherStation) -> None:
+        print(f"Temperature: {weather_info.temperature}")
+        print(f"Humidity: {weather_info.humidity}")
 
 
 weather_station1 = WeatherStation()
@@ -71,4 +71,4 @@ hum_display = HumidityDisplay()
 weather_station1.registering(temp_display)
 weather_station1.registering(hum_display)
 
-weather_station1.set_measurements(25, 60)
+weather_station1.set_measurements(25.0, 60.0)
